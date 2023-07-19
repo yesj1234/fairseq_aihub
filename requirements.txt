@@ -1,0 +1,8 @@
+librosa
+pandas
+openpyxl
+torch
+torchaudio
+sentencepiece
+omegaconf
+hydra-core
