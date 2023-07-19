@@ -1,4 +1,4 @@
-#This is
+# This is
 A repository for reproducing the result from the [paper](https://arxiv.org/abs/2107.02875).
 3 models are suggested in the paper. 
 first, base transformer model
@@ -6,14 +6,14 @@ second, asr pretrained encoder and transformer decoder trained on top of it.
 last, warm up + fine tuning version. Data used for warming up the model is the same data used for asr pretrained version but with pseudo-gold translation scripts included(translated by PAPAGO API).
 This repository is for reproducing the second version of the paper.
 
-##prerequisite.
+## prerequisite.
 follow the steps to download the kosp2e data and specific fairseq version [here](https://github.com/warnikchow/kosp2e)
 download ksponspeech data from [AIHUB](https://aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&aihubDataSe=realm&dataSetSn=123)
 ###Environment setting
 1. python >= 3.10 
 
-##How to 
-###train asr encoder with kspon data.
+## How to 
+### train asr encoder with kspon data.
 1. cd into the folder where kspon data is and run preprocessing_data.py
 ```
 python preprocessing_data.py --data_root $ASR_ROOT
