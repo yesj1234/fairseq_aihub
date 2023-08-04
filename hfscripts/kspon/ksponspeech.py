@@ -54,6 +54,7 @@ class KsponSpeech(datasets.GeneratorBasedBuilder):
                 {
                     "file": datasets.Value("string"),
                     "sentence": datasets.Value("string"),
+                    "audio": datasets.Audio(sampling_rate = 16000)
                 }
             ),
             supervised_keys=None,
@@ -68,7 +69,7 @@ class KsponSpeech(datasets.GeneratorBasedBuilder):
             datasets.SplitGenerator(
                 name=datasets.Split.TRAIN,
                 gen_kwargs={
-                    "filepath": join(self.data_dir, "scripts/train.trn"),
+                    "filepath": join(self.data_dir, "train.trn"),
                     "split": "train",
                 },
             ),
@@ -76,8 +77,8 @@ class KsponSpeech(datasets.GeneratorBasedBuilder):
                 name=datasets.Split.TEST,
                 gen_kwargs={
                     "filepath": {
-                        "clean": join(self.data_dir, "scripts/eval_clean.trn"),
-                        "other": join(self.data_dir, "scripts/eval_other.trn"),
+                        "clean": join(self.data_dir, "eval_clean.trn"),
+                        "other": join(self.data_dir, "eval_other.trn"),
                     },
                     "split": "test",
                 },
@@ -85,7 +86,7 @@ class KsponSpeech(datasets.GeneratorBasedBuilder):
             datasets.SplitGenerator(
                 name=datasets.Split.VALIDATION,
                 gen_kwargs={
-                    "filepath": join(self.data_dir, "scripts/dev.trn"),
+                    "filepath": join(self.data_dir, "dev.trn"),
                     "split": "validation",
                 },
             ),
@@ -93,7 +94,7 @@ class KsponSpeech(datasets.GeneratorBasedBuilder):
 
     def _generate_examples(self, filepath, split):
         """Yields examples as (key, example) tuples."""
-        if split is "test":
+        if split == "test":
             with open(filepath["clean"], encoding="utf-8") as f1, open(
                 filepath["other"], encoding="utf-8"
             ) as f2:
@@ -102,6 +103,7 @@ class KsponSpeech(datasets.GeneratorBasedBuilder):
                     path, sentence = tuple(row.split(" :: "))
                     yield id_, {
                         "file": join(self.data_dir, path),
+                        "audio": join(self.data_dir, path),
                         "sentence": sentence,
                     }
         else:
@@ -111,5 +113,6 @@ class KsponSpeech(datasets.GeneratorBasedBuilder):
                     path, sentence = tuple(row.split(" :: "))
                     yield id_, {
                         "file": join(self.data_dir, path),
+                        "audio": join(self.data_dir, path),
                         "sentence": sentence,
                     }
