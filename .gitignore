@@ -1,0 +1,4 @@
+*.pcm
+*.txt
+*.ipynb_checkpoints/
+*.ipynb

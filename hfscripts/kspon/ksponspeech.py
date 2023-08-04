@@ -101,18 +101,36 @@ class KsponSpeech(datasets.GeneratorBasedBuilder):
                 data = "\n".join([f1.read().strip(), f2.read().strip()])
                 for id_, row in enumerate(data.split("\n")):
                     path, sentence = tuple(row.split(" :: "))
-                    yield id_, {
-                        "file": join(self.data_dir, path),
-                        "audio": join(self.data_dir, path),
-                        "sentence": sentence,
-                    }
+                    if exists(join(self.data_dir, path)):
+                        with open(join(self.data_dir, path), 'rb') as audio_file:
+                            audio_data = audio_file.read()
+                        audio = {
+                            "path": join(self.data_dir, path),
+                            "bytes": audio_data,
+                            "sampling_rate": 16_000
+                        }
+                        
+                        yield id_, {
+                            "file": join(self.data_dir, path),
+                            "audio": audio,
+                            "sentence": sentence,
+                        }
         else:
             with open(filepath, encoding="utf-8") as f:
                 data = f.read().strip()
                 for id_, row in enumerate(data.split("\n")):
                     path, sentence = tuple(row.split(" :: "))
-                    yield id_, {
-                        "file": join(self.data_dir, path),
-                        "audio": join(self.data_dir, path),
-                        "sentence": sentence,
-                    }
+                    if exists(join(self.data_dir, path)):
+                        with open(join(self.data_dir, path), 'rb') as audio_file:
+                            audio_data = audio_file.read()
+                        audio = {
+                            "path": join(self.data_dir, path),
+                            "bytes": audio_data,
+                            "sampling_rate": 16_000
+                        }
+                        
+                        yield id_, {
+                            "file": join(self.data_dir, path),
+                            "audio": audio,
+                            "sentence": sentence,
+                        }
