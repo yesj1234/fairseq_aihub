@@ -1,27 +1,29 @@
 from datasets import load_dataset, load_metric, ClassLabel
-from transformers import Wav2Vec2CTCTokenizer, Wav2VecFeatureExtractor, Wav2VecProcessor
+from transformers import Wav2Vec2CTCTokenizer, Wav2Vec2FeatureExtractor, Wav2Vec2Processor
 import random
 import re
 import torch
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Union
-from transformers import (Wav2VecForCTC, Trainer, TrainingArguments)
+from transformers import (Wav2Vec2ForCTC, Trainer, TrainingArguments)
+from ksponspeech import sentence_filter
 
+kspon = load_dataset("./ksponspeech.py", data_dir="./ksponspeech/KsponSpeech_scripts")
 
-kspon = load_dataset("./ksponspeech.py", data_dir="./ksponspeech")
+print(kspon.DatasetInfo)
 
-chars_to_ignore_regex = '[\,\?\.\!\-\;\:\"]'
+# chars_to_ignore_regex = '[\,\?\.\!\-\;\:\"]'
 
-def remove_special_characters(batch):
-    batch["sentence"] = re.sub(chars_to_ignore_regex, "", batch["sentence"]).lower()
-    return batch
+# def remove_special_characters(batch):
+#     batch["sentence"] = re.sub(chars_to_ignore_regex, "", batch["sentence"]).lower()
+#     return batch
 
-def extract_all_chars(batch):
-    all_text = " ".join(batch["sentence"])
-    vocab = list(set(all_text))
-    return {"vocab": [vocab], "all_text": [all_text]}
+# def extract_all_chars(batch):
+#     all_text = " ".join(batch["sentence"])
+#     vocab = list(set(all_text))
+#     return {"vocab": [vocab], "all_text": [all_text]}
 
-vocabs = kspon.map(extract_all_chars, batched=True, batch_size=-1, keep_in_memory=True)
+vocabs = kspon.map(sentence_filter, batched=True, batch_size=-1, keep_in_memory=True)
 
 vocab_list = list(set(vocabs["train"]["vocab"][0]) | set(vocabs["test"]["vocab"][0]))
 
