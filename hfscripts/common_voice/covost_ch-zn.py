@@ -1,8 +1,7 @@
-from datasets import load_dataset, Audio, concatenate_datasets, load_metric
-import pykakasi
-import re 
-import MeCab
+from datasets import load_dataset, load_metric, concatenate_datasets
+import jieba
 import json
+import re 
 from transformers import (
     Wav2Vec2CTCTokenizer,
     Wav2Vec2FeatureExtractor,
@@ -18,27 +17,17 @@ import numpy as np
 import torchaudio
 
 #1.Prepare Dataset.
-covost_jp_train = load_dataset("mozilla-foundation/common_voice_11_0", "ja", split="train")
-covost_jp_test = load_dataset("mozilla-foundation/common_voice_11_0", "ja", split="test")
-covost_jp_val = load_dataset("mozilla-foundation/common_voice_11_0", "ja", split="validation")
+covost_ch_train = load_dataset("mozilla-foundation/common_voice_11_0", "zh-CN", split="train")
+covost_ch_test = load_dataset("mozilla-foundation/common_voice_11_0", "zh-CN", split="test")
+covost_ch_val = load_dataset("mozilla-foundation/common_voice_11_0", "zh-CN", split="validation")
 
-covost_jp_train = covost_jp_train.remove_columns(["accent", "age", "client_id", "down_votes", "gender", "locale", "segment", "up_votes"])
-covost_jp_test = covost_jp_test.remove_columns(["accent", "age", "client_id", "down_votes", "gender", "locale", "segment", "up_votes"])
-covost_jp_val = covost_jp_val.remove_columns(["accent", "age", "client_id", "down_votes", "gender", "locale", "segment", "up_votes"])
-
-# covost_jp_train = covost_jp_train.cast_column("audio", Audio("sampling_rate", 16000))
-# covost_jp_test = covost_jp_test.cast_column("audio", Audio("sampling_rate", 16000))
-# covost_jp_val = covost_jp_val.cast_column("audio", Audio("sampling_rate", 16000))
+covost_ch_train = covost_ch_train.remove_columns(["accent", "age", "client_id", "down_votes", "gender", "locale", "segment", "up_votes"])
+covost_ch_test = covost_ch_test.remove_columns(["accent", "age", "client_id", "down_votes", "gender", "locale", "segment", "up_votes"])
+covost_ch_val = covost_ch_val.remove_columns(["accent", "age", "client_id", "down_votes", "gender", "locale", "segment", "up_votes"])
 
 #2. Preprocess datasets.
-chars_to_ignore_regex = '[\,\?\.\!\-\;\:\"\“\‘\”\�‘、。．！，・―─~｢｣『』〆｡\\\\※\[\]\{\}「」〇？…]'
-wakati = MeCab.Tagger("-Owakati")
-kakasi = pykakasi.kakasi()
-kakasi.setMode("J","H")      # kanji to hiragana
-kakasi.setMode("K","H")      # katakana to hiragana
-converter = kakasi.getConverter()
-
-vocabPath = "./vocab_jp_hiragana_0807.json"
+chars_to_ignore_regex = '[\.\。\?\!\;\:\"\《\》\、\~]'
+vocab_path = "./vocab_zh-cn_0808.json"
 
 FULLWIDTH_TO_HALFWIDTH = str.maketrans(
     '　０１２３４５６７８９ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ！゛＃＄％＆（）＊＋、ー。／：；〈＝〉？＠［］＾＿‘｛｜｝～',
@@ -49,10 +38,8 @@ def fullwidth_to_halfwidth(s):
 
 def preprocess_text(batch):
     batch["sentence"] = fullwidth_to_halfwidth(batch["sentence"])
-    batch["sentence"] = re.sub(chars_to_ignore_regex,' ', batch["sentence"]).lower()  #remove special char
-    batch["sentence"] = wakati.parse(batch["sentence"])                              #add space
-    batch["sentence"] = converter.do(batch["sentence"])                                   #covert to hiragana
-    batch["sentence"] = " ".join(batch["sentence"].split())+" "                    #remove multiple space    
+    batch["sentence"] = " ".join(list(jieba.cut(batch["sentence"], cut_all=True))) # spliting into smallest token. 
+    batch["sentence"] = re.sub(chars_to_ignore_regex,' ', batch["sentence"]).lower()  #remove special char   
     return batch
 
 def createVocabList(dataset):
@@ -61,7 +48,6 @@ def createVocabList(dataset):
         vocab = list(set(all_text))
         return {"vocab": [vocab], "all_text": [all_text]}
 
-    
     dataset=dataset.map(preprocess_text)
     vocab_train = dataset.map(extract_all_chars, batched=True, batch_size=-1, keep_in_memory=True, remove_columns=dataset.column_names) #concat all text
     vocab_list = list(set(vocab_train["vocab"][0]) )      #convert to set
@@ -72,11 +58,10 @@ def createVocabList(dataset):
     vocab_dict["[UNK]"] = len(vocab_dict)
     vocab_dict["[PAD]"] = len(vocab_dict)
 
-    with open(vocabPath, 'w')as vocab_file:
+    with open(vocab_path, 'w')as vocab_file:
         json.dump(vocab_dict, vocab_file)
 
     print(vocab_dict)
-    
     
 def speech_file_to_array_fn(batch):
     speech_array, sampling_rate = torchaudio.load(batch["path"])
@@ -84,18 +69,17 @@ def speech_file_to_array_fn(batch):
     batch["target_text"] = batch["sentence"]
     return batch
 
-createVocabList(concatenate_datasets([covost_jp_train, covost_jp_val]))
+createVocabList(concatenate_datasets([covost_ch_train, covost_ch_val]))
 
-datasets_train = concatenate_datasets([covost_jp_train, covost_jp_val])
+datasets_train = concatenate_datasets([covost_ch_train, covost_ch_val])
 datasets_train = datasets_train.map(preprocess_text)
 datasets_train = datasets_train.map(speech_file_to_array_fn, remove_columns=datasets_train.column_names)
 
-datasets_test = concatenate_datasets([covost_jp_test])
+datasets_test = concatenate_datasets([covost_ch_test])
 datasets_test = datasets_test.map(preprocess_text)
-datasets_test = datasets_test.map(speech_file_to_array_fn, remove_columns=datasets_train.column_names)
-
+datasets_test = datasets_test.map(speech_file_to_array_fn, remove_columns=datasets_test.column_names)
 #3. initialize required instances to train wav2vec2 model. Tokenizer, feature_extractor, processor, trianer, training arguments, and custom data collator class.
-tokenizer = Wav2Vec2CTCTokenizer(vocabPath, unk_token="[UNK]", pad_token="[PAD]", word_delimiter_token="|")
+tokenizer = Wav2Vec2CTCTokenizer(vocab_path, unk_token="[UNK]", pad_token="[PAD]", word_delimiter_token="|")
 feature_extractor = Wav2Vec2FeatureExtractor(feature_size=1, sampling_rate=16000, padding_value=0.0, do_normalize=True, return_attention_mask=True)
 
 processor = Wav2Vec2Processor(feature_extractor=feature_extractor, tokenizer=tokenizer)
@@ -108,7 +92,6 @@ def prepare_dataset(batch):
 
 datasets_train = datasets_train.map(prepare_dataset, batch_size=4, batched=True)
 datasets_test = datasets_test.map(prepare_dataset, batch_size=4, batched=True)
-
 
 wer_metric = load_metric("wer")
 
@@ -175,7 +158,6 @@ class DataCollatorCTCWithPadding:
 
         return batch
 
-
 def compute_metrics(pred):
     pred_logits = pred.predictions
     pred_ids = np.argmax(pred_logits, axis=-1)
@@ -186,7 +168,9 @@ def compute_metrics(pred):
     wer = wer_metric.compute(predictions=pred_str, references=label_str)
     return {"wer": wer}
 
+
 #4. put them all together. 
+
 data_collator=DataCollatorCTCWithPadding(processor=processor, padding=True)
 
 model = Wav2Vec2ForCTC.from_pretrained(
