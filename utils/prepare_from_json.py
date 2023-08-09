@@ -54,21 +54,24 @@ import argparse
 def main(args):
     for root, dir, files in os.path.walk(args.jsons):
         if files:
+            print(f"json files from {os.path.join(root, dir)}")
             for file in files:
                 _, ext = os.path.splitext(file)
                 if ext == ".json":
-                    with open(file, "r") as json_file, open(args.dest_file, "a") as destination:
+                    with open(file, "r") as json_file, open(args.asr_dest_file, "a") as asr_destination, open(args.mt_dest_file, "a") as mt_destination:
                         json_data = json.load(json_file)
                         sound_filepaths = json_data["file"]["sound_filepath"]
-                        transcriptions = json_data["transcription"]["trans_text"]
+                        transcriptions = json_data["transcription"]["text"]
+                        translations = json_data["translation"]["trans_text"]
                         for i in range(len(sound_filepaths)):
-                            destination.write(f"{sound_filepaths[i]} :: {transcriptions[i]}\n")
-                        
+                            asr_destination.write(f"{sound_filepaths[i]} :: {transcriptions[i]}\n")
+                            mt_destination.write(f"{transcriptions[i]} :: {translations[i]}")
     
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dest-file", type=str, required=True, help="tsv file format that will eventually contain all the data")
+    parser.add_argument("--asr-dest-file", type=str, required=True, help="tsv file format that contains all the data for asr model")
+    parser.add_argument("--mt-dest-file", type=str, required=True, help="tsv file format that contains all the data for mt model")
     parser.add_argument("--jsons", type=str, required=True, help="folder path that has json files inside of it")
     args = parser.parse_args()
     main(args)
