@@ -27,9 +27,6 @@ covost_jp_train = covost_jp_train.remove_columns(["accent", "age", "client_id", 
 covost_jp_test = covost_jp_test.remove_columns(["accent", "age", "client_id", "down_votes", "gender", "locale", "segment", "up_votes"])
 covost_jp_val = covost_jp_val.remove_columns(["accent", "age", "client_id", "down_votes", "gender", "locale", "segment", "up_votes"])
 
-# covost_jp_train = covost_jp_train.cast_column("audio", Audio("sampling_rate", 16000))
-# covost_jp_test = covost_jp_test.cast_column("audio", Audio("sampling_rate", 16000))
-# covost_jp_val = covost_jp_val.cast_column("audio", Audio("sampling_rate", 16000))
 
 #2. Preprocess datasets.
 chars_to_ignore_regex = '[\,\?\.\!\-\;\:\"\“\‘\”\�‘、。．！，・―─~｢｣『』〆｡\\\\※\[\]\{\}「」〇？…]'
@@ -196,8 +193,8 @@ model = Wav2Vec2ForCTC.from_pretrained(
     "facebook/wav2vec2-large-xlsr-53", 
     attention_dropout=0.1,
     hidden_dropout=0.1,
-    feat_proj_dropout=0.0,
-    mask_time_prob=0.05,
+    feat_proj_dropout=0.1,
+    mask_time_prob=0.1,
     layerdrop=0.1,
     gradient_checkpointing=True, 
     ctc_loss_reduction="mean", 
@@ -210,17 +207,17 @@ model_temp_output_dir = f"./wav2vec2-large-xlsr-jp-test{now.strftime('%m%d')}_hi
 training_args = TrainingArguments(
   output_dir=model_temp_output_dir,  
   group_by_length=True,
-  per_device_train_batch_size=3,
+  per_device_train_batch_size=32,
   gradient_accumulation_steps=2,
   per_device_eval_batch_size=2,
   num_train_epochs=50,
   fp16=True,
-  evaluation_strategy="epoch",
+  evaluation_strategy="steps",
   save_strategy="epoch",
   logging_strategy="epoch",
-  learning_rate=3e-4,
-  warmup_steps=500,
-  save_total_limit=1,
+  learning_rate=1e-4,
+  warmup_steps=1500,
+  save_total_limit=2,
     push_to_hub=False,
 )
 
@@ -236,7 +233,6 @@ trainer = Trainer(
 
 if __name__ == "__main__":
     import time
-    import torch
     
     start = time.time()
     trainer.train()
