@@ -16,6 +16,7 @@ from dataclasses import dataclass, field
 import torch 
 import numpy as np
 import torchaudio
+from datetime import datetime 
 
 #1.Prepare Dataset.
 covost_jp_train = load_dataset("mozilla-foundation/common_voice_11_0", "ja", split="train")
@@ -38,7 +39,9 @@ kakasi.setMode("J","H")      # kanji to hiragana
 kakasi.setMode("K","H")      # katakana to hiragana
 converter = kakasi.getConverter()
 
-vocabPath = "./vocab_jp_hiragana_0807.json"
+month_and_date = f"{datetime.now().month}{datetime.now().day}"
+now = datetime.now()
+vocabPath = f"./vocab_jp_hiragana_{now.strftime('%m%d')}.json"
 
 FULLWIDTH_TO_HALFWIDTH = str.maketrans(
     '　０１２３４５６７８９ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ！゛＃＄％＆（）＊＋、ー。／：；〈＝〉？＠［］＾＿‘｛｜｝～',
@@ -92,7 +95,7 @@ datasets_train = datasets_train.map(speech_file_to_array_fn, remove_columns=data
 
 datasets_test = concatenate_datasets([covost_jp_test])
 datasets_test = datasets_test.map(preprocess_text)
-datasets_test = datasets_test.map(speech_file_to_array_fn, remove_columns=datasets_train.column_names)
+datasets_test = datasets_test.map(speech_file_to_array_fn, remove_columns=datasets_test.column_names)
 
 #3. initialize required instances to train wav2vec2 model. Tokenizer, feature_extractor, processor, trianer, training arguments, and custom data collator class.
 tokenizer = Wav2Vec2CTCTokenizer(vocabPath, unk_token="[UNK]", pad_token="[PAD]", word_delimiter_token="|")
@@ -203,7 +206,7 @@ model = Wav2Vec2ForCTC.from_pretrained(
 )
 model.freeze_feature_extractor()
 
-model_temp_output_dir = "./wav2vec2-large-xlsr-jp-test0807_hiragana"
+model_temp_output_dir = f"./wav2vec2-large-xlsr-jp-test{now.strftime('%m%d')}_hiragana"
 training_args = TrainingArguments(
   output_dir=model_temp_output_dir,  
   group_by_length=True,
@@ -218,8 +221,7 @@ training_args = TrainingArguments(
   learning_rate=3e-4,
   warmup_steps=500,
   save_total_limit=1,
-    push_to_hub=True,
-    # no_cuda=True
+    push_to_hub=False,
 )
 
 trainer = Trainer(
@@ -233,5 +235,12 @@ trainer = Trainer(
 )
 
 if __name__ == "__main__":
-    # trainer.train()
-    pass 
+    import time
+    import torch
+    
+    start = time.time()
+    trainer.train()
+    end = time.time() 
+    print("-"*30 + f"{end-start} Seconds" + "-"*30)
+    
+    

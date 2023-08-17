@@ -2,7 +2,7 @@ from transformers import MBartForConditionalGeneration, MBart50TokenizerFast
 import os
 import argparse
 from evaluate import load
-
+import torch
 
 def get_model_and_tokenizer(device):
     model = MBartForConditionalGeneration.from_pretrained("facebook/mbart-large-50-many-to-many-mmt").to(device)
