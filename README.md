@@ -83,3 +83,13 @@ ImportError: Using the `Trainer` with `PyTorch` requires `accelerate>=0.20.1`: P
 ```bash
 pip install accelerate -U
 ```
+## Monitoring 
+1. GPU usage monitoring
+```bash
+watch -d -n 1 nvidia-smi
+```
+2. CPU usage monitoring
+```bash
+top
+```
+3. 

@@ -201,7 +201,7 @@ model = Wav2Vec2ForCTC.from_pretrained(
     pad_token_id=processor.tokenizer.pad_token_id,
     vocab_size=len(processor.tokenizer)
 )
-model.freeze_feature_extractor()
+model.freeze_feature_encoder()
 
 model_temp_output_dir = f"./wav2vec2-large-xlsr-jp-test{now.strftime('%m%d')}_hiragana"
 training_args = TrainingArguments(
