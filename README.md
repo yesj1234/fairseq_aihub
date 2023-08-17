@@ -1,4 +1,4 @@
-### links
+# links
 ## MT
 1. ["mBART model checkpoint."](https://huggingface.co/facebook/mbart-large-50-many-to-many-mmt) 
 2. [example scripts from fairseq](https://github.com/facebookresearch/fairseq/tree/main/examples/mbart)
@@ -13,7 +13,7 @@
 1. [pipeline huggingface](https://huggingface.co/docs/transformers/v4.31.0/en/main_classes/pipelines#transformers.pipeline)
 
 
-## Setting OCI BM GPU instance.
+# Setting OCI BM GPU instance.
 [source from here](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#pre-installation-actions)
 Environment:
     Ubuntu20.04LTS
@@ -78,4 +78,8 @@ sudo apt-get install sox
 pip install sox 
 sudo apt update
 sudo apt install ffmpeg
+```
+ImportError: Using the `Trainer` with `PyTorch` requires `accelerate>=0.20.1`: Please run `pip install transformers[torch]` or `pip install accelerate -U`
+```bash
+pip install accelerate -U
 ```
