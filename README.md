@@ -10,15 +10,25 @@
 4. [xlsr korean checkpoint](https://huggingface.co/kresnik/wav2vec2-large-xlsr-korean)
 
 ## References
+### huggingface apis
 1. [pipeline huggingface](https://huggingface.co/docs/transformers/v4.31.0/en/main_classes/pipelines#transformers.pipeline)
+2. [Training args](https://github.com/huggingface/transformers/blob/main/src/transformers/training_args.py)
+3. []
 
-
+## Distributed Training and mixed precision(Multi GPU Settings)
+1. [trasformers/huggingface/pytorch](https://github.com/huggingface/transformers/tree/main/examples/pytorch#distributed-training-and-mixed-precision)
+1-1. [related guide about distributed training from pytorch](https://pytorch.org/docs/stable/generated/torch.nn.DataParallel.html#torch.nn.DataParallel)
+2. 
 # Setting OCI BM GPU instance.
 [source from here](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#pre-installation-actions)
 Environment:
     Ubuntu20.04LTS
     BM.GPU.A10.4
-    
+0. ssh into OCI instance
+```bash
+ssh -i <private key 파일 위치> opc@<public IP> #for Oracle Linux instance
+ssh -i <private key 파일 위치> ubuntu@<public IP> #for Ubuntu instance
+```
 1. Verify the system has a CUDA-Capable GPU
 ```bash
 lspci | grep -i nvidia
@@ -73,12 +83,20 @@ pip install jiwer #for loading the WER metric from datasets
 ```
 RuntimeError: failed to load mp3 from ... 에러
 ```bash 
-pip install soundfile
+# pip install soundfile  
+pip install librosa
 sudo apt-get install sox 
 pip install sox 
 sudo apt update
 sudo apt install ffmpeg
 ```
+install soundfile manually. 
+```bash
+git clone https://github.com/bastibe/python-soundfile.git
+cd python-soundfile/
+python build_wheels.py
+```
+
 ImportError: Using the `Trainer` with `PyTorch` requires `accelerate>=0.20.1`: Please run `pip install transformers[torch]` or `pip install accelerate -U`
 ```bash
 pip install accelerate -U
