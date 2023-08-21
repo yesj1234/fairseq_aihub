@@ -19,6 +19,7 @@
 1. [trasformers/huggingface/pytorch](https://github.com/huggingface/transformers/tree/main/examples/pytorch#distributed-training-and-mixed-precision)
 1-1. [related guide about distributed training from pytorch](https://pytorch.org/docs/stable/generated/torch.nn.DataParallel.html#torch.nn.DataParallel)
 2. 
+
 # Setting OCI BM GPU instance.
 [source from here](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#pre-installation-actions)
 Environment:
@@ -153,3 +154,6 @@ watch -d -n 1 nvidia-smi
 ```bash
 top
 ```
+
+# My Emojis
+🛠️ : 미완성 코드. 추가 코드 작업 필요.
