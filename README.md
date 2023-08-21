@@ -90,7 +90,7 @@ pip install sox
 sudo apt update
 sudo apt install ffmpeg
 ```
-install soundfile manually. 
+install soundfile manually.(mp3일 경우에만. wav이면 pip install soundfile) 
 ```bash
 git clone https://github.com/bastibe/python-soundfile.git
 cd python-soundfile/
