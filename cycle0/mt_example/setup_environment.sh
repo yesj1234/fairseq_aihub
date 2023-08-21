@@ -12,9 +12,13 @@ sudo apt-get install -y cuda
 sudo apt install python3-pip 
 
 # 4. install python libraries 
-pip install transformers datasets torch torchaudio torchvision numpy soundfile librosa 
-sudo apt-get install sox 
-pip install sox 
+pip install -y transformers datasets torch torchaudio torchvision numpy evaluate
+sudo apt-get install -y sox 
+pip install -y sox 
 sudo apt update 
-sudo apt install ffmpeg 
-pip install -U accelerate 
+sudo apt install -y ffmpeg 
+pip install -U -y accelerate 
+pip install -y urllib3 requests
+pip install sentencepiece sacrebleu
+pip install -U protobuf
+pip install --upgrade protobuf

@@ -5,17 +5,5 @@
 LOCAL_RANK=0,1,2,3 \
 CUDA_VISIBLE_DEVICES=0,1,2,3 \
 python3 -m torch.distributed.launch --nproc_per_node 4 \
---use-env run_training.py \
---model_name_or_path facebook/mbart-large-50-many-to-many-mmt \
---source_lang en_XX \
---target_lang ko_KR \
---dataset_name opus100 \
---pad_to_max_length True \
---output_dir \
---per_device_train_batch_size 32 \
---per_device_eval_batch_size 16 \
---overwrite_output_dir \
---do-train \
---do-eval \
---predict-with-generate
-
+--use-env run_translation.py \
+run_translation_gpu.json
