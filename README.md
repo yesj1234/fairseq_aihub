@@ -101,6 +101,47 @@ ImportError: Using the `Trainer` with `PyTorch` requires `accelerate>=0.20.1`: P
 ```bash
 pip install accelerate -U
 ```
+
+Multi GPU:
+```bash
+LOCAL_RANK=0,1,2,3 \
+CUDA_VISIBLE_DEVICES=0,1,2,3 \
+python3 -m torch.distributed.launch --nproc_per_node 4 \
+--use-env run_speech_recognition_ctc.py \
+--model_name_or_path facebook/wav2vec2-large-xlsr-53 \
+--overwrite_output_dir \
+--freeze_feature_encoder True \
+--attention_dropout 0.1 \
+--hidden_dropout 0.1 \
+--feat_proj_dropout 0.1 \
+--mask_time_prob 0.1 \
+--layerdrop 0.1 \
+--ctc_loss_reduction mean \
+--dataset_name mozilla-foundation/common_voice_11_0 \
+--dataset_config_name ja \
+--train_split_name train \
+--eval_split_name validation \
+--audio_column_name audio \
+--text_column_name sentence \
+--eval_metrics cer \
+--chars_to_ignore [\,\?\.\!\-\;\:\"\“\‘\”\ ‘、。．！，・―─~｢｣『』〆｡\\\\※\[\]\{\}「」〇？…] \
+--unk_token [UNK] \
+--pad_token [PAD] \
+--word_delimiter_token '|' \
+--output_dir ./wav2vec2-large-xlsr-jp-test0818_hiragana \
+--do_train --do_eval --do_predict \
+--evaluation_strategy steps \
+--per_device_train_batch_size 16 \
+--per_device_eval_batch_size 8 \
+--gradient_accumulation_steps 2 \
+--num_train_epochs 50 \
+--save_strategy epoch \
+--logging_strategy epoch \
+--learning_rate 1e-4 \
+--warmup_steps 1500 \
+--save_total_limit 2 \
+--group_by_length True
+```
 ## Monitoring 
 1. GPU usage monitoring
 ```bash
@@ -110,4 +151,3 @@ watch -d -n 1 nvidia-smi
 ```bash
 top
 ```
-3. 
