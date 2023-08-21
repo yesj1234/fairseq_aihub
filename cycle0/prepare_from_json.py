@@ -104,17 +104,17 @@ def main(args):
                             open(f"{os.path.join(args.asr_dest_file, 'test.tsv')}", "a+") as asr_test, \
                             open(f"{os.path.join(args.asr_dest_file, 'validation.tsv')}", "a+") as asr_validate:
                             for i in len(sound_file_path_train):
-                                asr_train.write(f"{sound_file_path_train[i]} :: {transcription_train[i]}")
-                                asr_test.write(f"{sound_file_path_test[i]} :: {transcription_test[i]}")
-                                asr_validate.write(f"{sound_file_path_validate[i]} :: {transcription_validate[i]}")
+                                asr_train.write(f"{sound_file_path_train[i]} :: {transcription_train[i]}\n")
+                                asr_test.write(f"{sound_file_path_test[i]} :: {transcription_test[i]}\n")
+                                asr_validate.write(f"{sound_file_path_validate[i]} :: {transcription_validate[i]}\n")
                                 
                         with open(f"{os.path.join(args.mt_dest_file, 'train.tsv')}", "a+") as mt_train, \
                             open(f"{os.path.join(args.mt_dest_file, 'test.tsv')}", "a+") as mt_test, \
                             open(f"{os.path.join(args.mt_dest_file, 'validation.tsv')}", "a+") as mt_validate:
                             for i in len(sound_file_path_train):
-                                mt_train.write(f"{transcription_train[i]} :: {translation_train[i]}")
-                                mt_test.write(f"{transcription_test[i]} :: {translation_test[i]}")
-                                mt_validate.write(f"{transcription_validate[i]} :: {translation_validate[i]}")
+                                mt_train.write(f"{transcription_train[i]} :: {translation_train[i]}\n")
+                                mt_test.write(f"{transcription_test[i]} :: {translation_test[i]}\n")
+                                mt_validate.write(f"{transcription_validate[i]} :: {translation_validate[i]}\n")
                                 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
