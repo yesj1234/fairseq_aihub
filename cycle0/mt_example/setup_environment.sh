@@ -1,4 +1,4 @@
-# 1. install gcc and cmake
+# # 1. install gcc and cmake
 sudo apt install -y gcc
 sudo apt install -y cmake
 
@@ -9,16 +9,12 @@ sudo apt-get update
 sudo apt-get install -y cuda
 
 # 3. install pip
-sudo apt install python3-pip 
+sudo apt install -y python3-pip 
 
 # 4. install python libraries 
-pip install -y transformers datasets torch torchaudio torchvision numpy evaluate
-sudo apt-get install -y sox 
-pip install -y sox 
-sudo apt update 
-sudo apt install -y ffmpeg 
-pip install -U -y accelerate 
-pip install -y urllib3 requests
+pip install transformers datasets torch torchaudio numpy evaluate
+pip install -U accelerate 
+pip install --upgrade urllib3 requests
 pip install sentencepiece sacrebleu
 pip install -U protobuf
 pip install --upgrade protobuf
