@@ -33,8 +33,8 @@
         "sl_mistake": [],
         "sl_again": [],
         "sl_interjection": [],
-        "en_outside": "X",
-        "en_insdie": "O",
+        "en_outside": "",
+        "en_inside": "",
         "en_day": "X",
         "en_night": "O"
       }

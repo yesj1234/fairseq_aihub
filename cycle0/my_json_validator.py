@@ -1,9 +1,10 @@
 import json
 import os
-from jsonschema import validate, ValidationError
-
+import jsonschema
+from jsonschema import validate, ValidationError, Draft7Validator
 import argparse
 my_json_schema = {
+    "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "properties": {
         "contents": {
@@ -49,10 +50,10 @@ my_json_schema = {
                             "sl_mistake": {"type": "array"},
                             "sl_again": {"type": "array"},
                             "sl_interjection": {"type": "array"},
-                            "en_outside": {"type": "string"},
-                            "en_inside": {"type": "string"},
-                            "en_day": {"type": "string"},
-                            "en_night": {"type": "string"}
+                            "en_outside": {"type": "string", "minLength": 1},
+                            "en_inside": {"type": "string", "minLength": 1},
+                            "en_day": {"type": "string", "minLength": 1},
+                            "en_night": {"type": "string", "minLength": 1}
                         },
                         "required": [
                             "fi_sound_filename",
@@ -100,20 +101,53 @@ my_json_schema = {
 }
 
 
+# def main(args):
+#     error_count = 0
+#     # validator = Draft7Validator(my_json_schema)
+
+#     for root, dir, files in os.walk(args.json_dir):
+#         for file in files:
+#             _, ext = os.path.splitext(file)
+#             if ext == ".json":
+#                 try:
+#                     print(f"validating {file}")
+#                     with open(os.path.join(root, file), "r", encoding='utf-8') as json_file:
+#                         parsed_json = json.load(json_file)
+#                     validate(instance=parsed_json, schema=my_json_schema)
+#                 except ValidationError as e:
+#                     print(e.message)
+#                     continue
+
+#     print(error_count)
+
 def main(args):
     error_count = 0
+    validator = Draft7Validator(my_json_schema)
     for root, dir, files in os.walk(args.json_dir):
         for file in files:
             _, ext = os.path.splitext(file)
             if ext == ".json":
                 try:
-                    print(f"validating {file}")
-                    validate(os.path.join(root, file), my_json_schema)
+                    with open(os.path.join(root, file), "r", encoding="utf-8") as json_file:
+                        parsed_json = json.load(json_file)
+                    for error in sorted(validator.iter_errors(parsed_json), key=str):
+                        print(error.message)
+                        # print(error.validator)
+                        # print(error.validator_value)
+                        # print(error.relative_schema_path)
+                        # print(error.absolute_schema_path)
+                        # print(error.absolute_path)
+                        print(
+                            f"Error at {'.'.join([str(item) for item in error.absolute_path])}")
+                        # print(error.json_path)
+                        # print(error.context)
+                        # for err in error.absolute_path:
+                        #     print(
+                        #         f"Error at: {'.'.join(str(item) for item in err)}")
+
+                        # print(error.message)
                 except ValidationError as e:
-                    print(f"error : {e} from {file}")
-                    error_count += 1
-                    pass
-    print(error_count)
+                    continue
 
 
 if __name__ == "__main__":
