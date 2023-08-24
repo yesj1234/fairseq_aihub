@@ -19,8 +19,8 @@ my_json_schema = {
                 "fi_source_filename": {"type": "string"},
                 "fi_source_filepath": {"type": "string"},
                 "li_platform_info": {"type": "string"},
-                "li_subject": {"type": "string"},
-                "li_summary": {"type": "string"},
+                "li_subject": {"type": "string"},  # not required
+                "li_summary": {"type": "string"},  # not required
                 "li_location": {"type": "string"},
                 "text_info": {
                     "type": "array",
@@ -59,10 +59,26 @@ my_json_schema = {
                             "tl_back_trans_text": {"type": "string"},
                             "sl_new_word": {"type": "array"},
                             "sl_abbreviation_word": {"type": "array"},
-                            "sl_slang": {"type": "array"},
-                            "sl_mistake": {"type": "array"},
-                            "sl_again": {"type": "array"},
-                            "sl_interjection": {"type": "array"},
+                            "sl_slang": {"type": "array",
+                                         "items": {
+                                             "type": "string"
+                                         }
+                                         },
+                            "sl_mistake": {"type": "array",
+                                           "items": {
+                                               "type": "string"
+                                           }
+                                           },
+                            "sl_again": {"type": "array",
+                                         "items": {
+                                             "type": "string"
+                                         }
+                                         },
+                            "sl_interjection": {"type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                                },
                             # "en_outside": {"type": "string", "minLength": 1}, #enum으로 넣을 수 있음?
                             "en_outside": {"type": "string", "enum": ["X", "O"]},
                             # enum으로 넣을 수 있음?
@@ -70,7 +86,8 @@ my_json_schema = {
                             # enum으로 넣을 수 있음?
                             "en_day": {"type": "string", "minLength": 1},
                             # enum으로 넣을 수 있음?
-                            "en_night": {"type": "string", "minLength": 1}
+                            "en_night": {"type": "string", "minLength": 1},
+                            # "en_noise": {"type": "string"}
                         },
                         "required": [
                             "fi_sound_filename",
@@ -94,7 +111,8 @@ my_json_schema = {
                             "en_outside",
                             "en_inside",
                             "en_day",
-                            "en_night"
+                            "en_night",
+                            # "en_noise"
                         ]
                     }
                 }
@@ -107,8 +125,8 @@ my_json_schema = {
                 "fi_source_filename",
                 "fi_source_filepath",
                 "li_platform_info",
-                "li_subject",
-                "li_summary",
+                "li_subject",  # 필수 아님.
+                "li_summary",  # 필수 아님.
                 "li_location",
                 "text_info"
             ]
@@ -119,6 +137,7 @@ my_json_schema = {
 
 
 def main(args):
+    json_files = []
     required_property_missing_file = []
     required_property_value_missing_file = []
     validator = Draft7Validator(my_json_schema)
@@ -126,6 +145,7 @@ def main(args):
         for file in files:
             _, ext = os.path.splitext(file)
             if ext == ".json":
+                json_files.append(os.path.join(root, file))
                 try:
                     with open(os.path.join(root, file), "r", encoding="utf-8") as json_file:
                         parsed_json = json.load(json_file)
@@ -150,7 +170,7 @@ def main(args):
     required_property_missing_file = set(required_property_missing_file)
     print(f"이빨 빠진 파일 개수: {len(required_property_missing_file)}")
     print(f"형식에 안맞는 밸류 개수: {len(required_property_value_missing_file)}")
-
+    print(f"검사한 총 파일 개수: {len(json_files)}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
