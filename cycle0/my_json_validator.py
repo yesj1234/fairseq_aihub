@@ -12,51 +12,40 @@ my_json_schema = {
         "contents": {
             "type": "object",
             "properties": {
-                "source": {"type": "string"},
-                "category": {"type": "string"},  # enum으로 넣을 수 있음?
-                "solved_copyright": {"type": "string"},
-                "origin_lang": {"type": "string"},  # enum으로 넣을 수 있음?
-                "fi_source_filename": {"type": "string"},
-                "fi_source_filepath": {"type": "string"},
-                "li_platform_info": {"type": "string"},
+                "source": {"type": "string", "minLength": 1},
+                "category": {"type": "string", "minLength": 1},
+                "solved_copyright": {"type": "string", "minLength": 1},
+                "origin_lang": {"type": "string", "minLength": 1},
+                "fi_source_filename": {"type": "string", "minLength": 1},
+                "fi_source_filepath": {"type": "string", "minLength": 1},
+                "li_platform_info": {"type": "string", "minLength": 1},
                 "li_subject": {"type": "string"},  # not required
                 "li_summary": {"type": "string"},  # not required
-                "li_location": {"type": "string"},
+                "li_location": {"type": "string", "minLength": 1},
                 "text_info": {
                     "type": "array",
                     "items": {
                         "type": "object",
                         "properties": {
-                            # string으로 들어올 때 minLength, maxLength 정해주면 됟듯?
-                            "fi_sound_filename": {"type": "string"},
-                            # string으로 들어올 때 minLength, maxLength 정해주면 됟듯?
-                            "fi_sound_filepath": {"type": "string"},
-                            # string으로 들어올 때 minLength, maxLength 정해주면 됟듯?
-                            "fi_start_sound_time": {"type": "string"},
-                            # string으로 들어올 때 minLength, maxLength 정해주면 됟듯?
-                            "fi_end_sound_time": {"type": "string"},
-                            # string으로 들어올 때 minLength, maxLength 정해주면 됟듯?
-                            "fi_start_voice_time": {"type": "string"},
-                            # string으로 들어올 때 minLength, maxLength 정해주면 됟듯?
-                            "fi_end_voice_time": {"type": "string"},
+                            "fi_sound_filename": {"type": "string", "minLength": 1},
+                            "fi_sound_filepath": {"type": "string", "minLength": 1},
+                            "fi_start_sound_time": {"type": "string", "minLength": 1},
+                            "fi_end_sound_time": {"type": "string", "minLength": 1},
+                            "fi_start_voice_time": {"type": "string", "minLength": 1},
+                            "fi_end_voice_time": {"type": "string", "minLength": 1},
                             "li_speaker_info": {
                                 "type": "object",
                                 "properties": {
-                                    # enum으로 넣을 수 있음?
                                     "gender": {"type": "string"},
-                                    # enum으로 넣을 수 있음?
                                     "ageGroup": {"type": "string"}
                                 },
                                 "required": ["gender", "ageGroup"]
                             },
-                            "tc_text": {"type": "string"},
-                            # enum으로 넣을 수 있음?
-                            "tl_trans_lang": {"type": "string"},
-                            # string으로 들어올 때 minLength, maxLength 정해주면 됟듯?
-                            "tl_trans_text": {"type": "string"},
-                            # enum으로 넣을 수 있음?
-                            "tl_back_trans_lang": {"type": "string"},
-                            "tl_back_trans_text": {"type": "string"},
+                            "tc_text": {"type": "string", "minLength": 1},
+                            "tl_trans_lang": {"type": "string", "minLength": 1},
+                            "tl_trans_text": {"type": "string", "minLength": 1},
+                            "tl_back_trans_lang": {"type": "string", "minLength": 1},
+                            "tl_back_trans_text": {"type": "string", "minLength": 1},
                             "sl_new_word": {"type": "array"},
                             "sl_abbreviation_word": {"type": "array"},
                             "sl_slang": {"type": "array",
@@ -79,15 +68,10 @@ my_json_schema = {
                                                     "type": "string"
                                                 }
                                                 },
-                            # "en_outside": {"type": "string", "minLength": 1}, #enum으로 넣을 수 있음?
-                            "en_outside": {"type": "string", "enum": ["X", "O"]},
-                            # enum으로 넣을 수 있음?
+                            "en_outside": {"type": "string", "minLength": 1},
                             "en_inside": {"type": "string", "minLength": 1},
-                            # enum으로 넣을 수 있음?
                             "en_day": {"type": "string", "minLength": 1},
-                            # enum으로 넣을 수 있음?
                             "en_night": {"type": "string", "minLength": 1},
-                            # "en_noise": {"type": "string"}
                         },
                         "required": [
                             "fi_sound_filename",
@@ -102,17 +86,16 @@ my_json_schema = {
                             "tl_trans_text",
                             "tl_back_trans_lang",
                             "tl_back_trans_text",
-                            "sl_new_word",
-                            "sl_abbreviation_word",
-                            "sl_slang",
-                            "sl_mistake",
-                            "sl_again",
-                            "sl_interjection",
+                            # "sl_new_word", # not required
+                            # "sl_abbreviation_word", # not required
+                            # "sl_slang", # not required
+                            # "sl_mistake", # not required
+                            # "sl_again", # not required
+                            # "sl_interjection", # not required
                             "en_outside",
                             "en_inside",
                             "en_day",
                             "en_night",
-                            # "en_noise"
                         ]
                     }
                 }
@@ -125,10 +108,11 @@ my_json_schema = {
                 "fi_source_filename",
                 "fi_source_filepath",
                 "li_platform_info",
-                "li_subject",  # 필수 아님.
-                "li_summary",  # 필수 아님.
                 "li_location",
+                # "li_suject", # not required
+                # "li_summary", # not required 
                 "text_info"
+                
             ]
         }
     },
@@ -171,6 +155,7 @@ def main(args):
     print(f"이빨 빠진 파일 개수: {len(required_property_missing_file)}")
     print(f"형식에 안맞는 밸류 개수: {len(required_property_value_missing_file)}")
     print(f"검사한 총 파일 개수: {len(json_files)}")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
