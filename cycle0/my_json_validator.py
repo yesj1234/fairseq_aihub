@@ -3,6 +3,8 @@ import os
 import jsonschema
 from jsonschema import validate, ValidationError, Draft7Validator
 import argparse
+# 1. required property 정하기.
+# 2. 밸류 값으로 들어오는게 정해져 있는 경우 구분하기 => enum
 my_json_schema = {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
@@ -11,9 +13,9 @@ my_json_schema = {
             "type": "object",
             "properties": {
                 "source": {"type": "string"},
-                "category": {"type": "string"},
+                "category": {"type": "string"},  # enum으로 넣을 수 있음?
                 "solved_copyright": {"type": "string"},
-                "origin_lang": {"type": "string"},
+                "origin_lang": {"type": "string"},  # enum으로 넣을 수 있음?
                 "fi_source_filename": {"type": "string"},
                 "fi_source_filepath": {"type": "string"},
                 "li_platform_info": {"type": "string"},
@@ -25,23 +27,34 @@ my_json_schema = {
                     "items": {
                         "type": "object",
                         "properties": {
+                            # string으로 들어올 때 minLength, maxLength 정해주면 됟듯?
                             "fi_sound_filename": {"type": "string"},
+                            # string으로 들어올 때 minLength, maxLength 정해주면 됟듯?
                             "fi_sound_filepath": {"type": "string"},
+                            # string으로 들어올 때 minLength, maxLength 정해주면 됟듯?
                             "fi_start_sound_time": {"type": "string"},
+                            # string으로 들어올 때 minLength, maxLength 정해주면 됟듯?
                             "fi_end_sound_time": {"type": "string"},
+                            # string으로 들어올 때 minLength, maxLength 정해주면 됟듯?
                             "fi_start_voice_time": {"type": "string"},
+                            # string으로 들어올 때 minLength, maxLength 정해주면 됟듯?
                             "fi_end_voice_time": {"type": "string"},
                             "li_speaker_info": {
                                 "type": "object",
                                 "properties": {
+                                    # enum으로 넣을 수 있음?
                                     "gender": {"type": "string"},
+                                    # enum으로 넣을 수 있음?
                                     "ageGroup": {"type": "string"}
                                 },
                                 "required": ["gender", "ageGroup"]
                             },
                             "tc_text": {"type": "string"},
+                            # enum으로 넣을 수 있음?
                             "tl_trans_lang": {"type": "string"},
+                            # string으로 들어올 때 minLength, maxLength 정해주면 됟듯?
                             "tl_trans_text": {"type": "string"},
+                            # enum으로 넣을 수 있음?
                             "tl_back_trans_lang": {"type": "string"},
                             "tl_back_trans_text": {"type": "string"},
                             "sl_new_word": {"type": "array"},
@@ -50,9 +63,13 @@ my_json_schema = {
                             "sl_mistake": {"type": "array"},
                             "sl_again": {"type": "array"},
                             "sl_interjection": {"type": "array"},
-                            "en_outside": {"type": "string", "minLength": 1},
+                            # "en_outside": {"type": "string", "minLength": 1}, #enum으로 넣을 수 있음?
+                            "en_outside": {"type": "string", "enum": ["X", "O"]},
+                            # enum으로 넣을 수 있음?
                             "en_inside": {"type": "string", "minLength": 1},
+                            # enum으로 넣을 수 있음?
                             "en_day": {"type": "string", "minLength": 1},
+                            # enum으로 넣을 수 있음?
                             "en_night": {"type": "string", "minLength": 1}
                         },
                         "required": [
@@ -101,27 +118,9 @@ my_json_schema = {
 }
 
 
-# def main(args):
-#     error_count = 0
-#     # validator = Draft7Validator(my_json_schema)
-
-#     for root, dir, files in os.walk(args.json_dir):
-#         for file in files:
-#             _, ext = os.path.splitext(file)
-#             if ext == ".json":
-#                 try:
-#                     print(f"validating {file}")
-#                     with open(os.path.join(root, file), "r", encoding='utf-8') as json_file:
-#                         parsed_json = json.load(json_file)
-#                     validate(instance=parsed_json, schema=my_json_schema)
-#                 except ValidationError as e:
-#                     print(e.message)
-#                     continue
-
-#     print(error_count)
-
 def main(args):
-    error_count = 0
+    required_property_missing_file = []
+    required_property_value_missing_file = []
     validator = Draft7Validator(my_json_schema)
     for root, dir, files in os.walk(args.json_dir):
         for file in files:
@@ -131,23 +130,26 @@ def main(args):
                     with open(os.path.join(root, file), "r", encoding="utf-8") as json_file:
                         parsed_json = json.load(json_file)
                     for error in sorted(validator.iter_errors(parsed_json), key=str):
-                        print(error.message)
+                        print(
+                            f"Message: {error.message} \nFile: {file} \nError source : {'.'.join([str(item) for item in error.absolute_path])}\n")
+                        if "required property" in error.message:
+                            required_property_missing_file.append(file)
+                        else:
+                            required_property_value_missing_file.append(
+                                error.message)
                         # print(error.validator)
                         # print(error.validator_value)
                         # print(error.relative_schema_path)
                         # print(error.absolute_schema_path)
                         # print(error.absolute_path)
-                        print(
-                            f"Error at {'.'.join([str(item) for item in error.absolute_path])}")
                         # print(error.json_path)
                         # print(error.context)
-                        # for err in error.absolute_path:
-                        #     print(
-                        #         f"Error at: {'.'.join(str(item) for item in err)}")
-
-                        # print(error.message)
                 except ValidationError as e:
+                    print(e)
                     continue
+    required_property_missing_file = set(required_property_missing_file)
+    print(f"이빨 빠진 파일 개수: {len(required_property_missing_file)}")
+    print(f"형식에 안맞는 밸류 개수: {len(required_property_value_missing_file)}")
 
 
 if __name__ == "__main__":
