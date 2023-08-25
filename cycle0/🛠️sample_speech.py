@@ -6,7 +6,7 @@ from datasets.download.download_manager import DownloadManager
 
 _DESCRIPTION = "sample data for Cycle 0"
 
-class CleaveSpeech(datasets.GeneratorBasedBuilder): 
+class SampleSpeech(datasets.GeneratorBasedBuilder): 
     
     def _info(self):
         return datasets.DatasetInfo(
@@ -28,21 +28,21 @@ class CleaveSpeech(datasets.GeneratorBasedBuilder):
             datasets.SplitGenerator(
                 name=datasets.Split.TRAIN,
                 gen_kwargs={
-                    "filepath": os.path.join(self.data_dir, "asr_train.tsv"),
+                    "filepath": os.path.join(self.data_dir, "train.tsv"),
                     "split": "train"
                 }
             ),
             datasets.SplitGenerator(
                 name=datasets.Split.TEST,
                 gen_kwargs={
-                    "filepath": os.path.join(self.data_dir, "asr_test.tsv"),
+                    "filepath": os.path.join(self.data_dir, "test.tsv"),
                     "split": "test"
                 }
             ),
             datasets.SplitGenerator(
                 name=datasets.Split.VALIDATION,
                 gen_kwargs={
-                    "filepath": os.path.join(self.data_dir, "asr_validation.tsv"),
+                    "filepath": os.path.join(self.data_dir, "validation.tsv"),
                     "split": "validation"
                 }
             )
@@ -53,16 +53,18 @@ class CleaveSpeech(datasets.GeneratorBasedBuilder):
             data = f.read().strip()
             for id_, row in enumerate(data.split("\n")):
                 path, sentence = tuple(row.split(" :: "))
-                # FIGURE OUT how to download and extract the audio in local file system.
-                # 1. read the audio file. audio_data = audio_file.read()
-                # 2. audio = {
-                #       "path": path to the audio file,
-                #       "bytes": audio_data,
-                #       "sampling_rate": 16_000
-                # }
-                # 3. yield id_, {
-                #    "file": path to the audio,
-                #    "audio": audio,
-                #    "sentence": sentence
-                # }
+                if os.path.exists(os.path.join(self.data_dir, path)):
+                    with open(os.path.join(self.data_dir, path), 'rb') as audio_file:
+                        audio_data = audio_file.read()
+                    audio = {
+                        "path": os.path.join(self.data_dir, path),
+                        "bytes": audio_data,
+                        "sampling_rate": 16_000
+                    }
+                    
+                    yield id_, {
+                        "file": os.path.join(self.data_dir, path),
+                        "audio": audio,
+                        "sentence": sentence,
+                    }
                 

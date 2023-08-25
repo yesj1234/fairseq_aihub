@@ -23,12 +23,12 @@ if __name__ == "__main__":
     # We need to read the audio files as arrays
     def speech_file_to_array_fn(batch):
         speech_array, sampling_rate = librosa.load(batch["path"], sr=16_000)
-        batch["speech"] = speech_array
+        batch["audio"] = speech_array
         batch["sentence"] = batch["sentence"].upper()
         return batch
 
     test_dataset = test_dataset.map(speech_file_to_array_fn)
-    inputs = processor(test_dataset["speech"], sampling_rate=16_000, return_tensors="pt", padding=True)
+    inputs = processor(test_dataset["audio"], sampling_rate=16_000, return_tensors="pt", padding=True)
 
     with torch.no_grad():
         logits = model(inputs.input_values.to(device), attention_mask=inputs.attention_mask.to(device)).logits
