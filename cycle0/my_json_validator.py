@@ -3,8 +3,6 @@ import os
 import jsonschema
 from jsonschema import validate, ValidationError, Draft7Validator
 import argparse
-# 1. required property 정하기.
-# 2. 밸류 값으로 들어오는게 정해져 있는 경우 구분하기 => enum
 my_json_schema = {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
