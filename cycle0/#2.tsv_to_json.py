@@ -1,3 +1,4 @@
+# 이거 왜 만든거더라.. 기억이 안나버리네
 import os
 import csv
 import json
@@ -13,8 +14,9 @@ def main(args):
                 new_json = {}
                 rows = []
                 with open(os.path.join(root, file), "r+", encoding="utf-8") as f:
-                    split = csv.reader(f, delimiter="\t")
+                    split = csv.reader(f, delimiter="\n")
                     for row in split:
+                        print(row)
                         source_lang, target_lang = row[0].split(" :: ")
                         rows.append({f"{args.source_lang}": source_lang, f"{args.target_lang}": target_lang})
                 new_json["translation"] = rows

@@ -4,117 +4,194 @@ import jsonschema
 from jsonschema import validate, ValidationError, Draft7Validator
 import argparse
 my_json_schema = {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "properties": {
-        "contents": {
-            "type": "object",
-            "properties": {
-                "source": {"type": "string", "minLength": 1},
-                "category": {"type": "string", "minLength": 1},
-                "solved_copyright": {"type": "string", "minLength": 1},
-                "origin_lang": {"type": "string", "minLength": 1},
-                "fi_source_filename": {"type": "string", "minLength": 1},
-                "fi_source_filepath": {"type": "string", "minLength": 1},
-                "li_platform_info": {"type": "string", "minLength": 1},
-                "li_subject": {"type": "string"},  # not required
-                "li_summary": {"type": "string"},  # not required
-                "li_location": {"type": "string", "minLength": 1},
-                "text_info": {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "fi_sound_filename": {"type": "string", "minLength": 1},
-                            "fi_sound_filepath": {"type": "string", "minLength": 1},
-                            "fi_start_sound_time": {"type": "string", "minLength": 1},
-                            "fi_end_sound_time": {"type": "string", "minLength": 1},
-                            "fi_start_voice_time": {"type": "string", "minLength": 1},
-                            "fi_end_voice_time": {"type": "string", "minLength": 1},
-                            "li_speaker_info": {
-                                "type": "object",
-                                "properties": {
-                                    "gender": {"type": "string"},
-                                    "ageGroup": {"type": "string"}
-                                },
-                                "required": ["gender", "ageGroup"]
-                            },
-                            "tc_text": {"type": "string", "minLength": 1},
-                            "tl_trans_lang": {"type": "string", "minLength": 1},
-                            "tl_trans_text": {"type": "string", "minLength": 1},
-                            "tl_back_trans_lang": {"type": "string", "minLength": 1},
-                            "tl_back_trans_text": {"type": "string", "minLength": 1},
-                            "sl_new_word": {"type": "array"},
-                            "sl_abbreviation_word": {"type": "array"},
-                            "sl_slang": {"type": "array",
-                                         "items": {
-                                             "type": "string"
-                                         }
-                                         },
-                            "sl_mistake": {"type": "array",
-                                           "items": {
-                                               "type": "string"
-                                           }
-                                           },
-                            "sl_again": {"type": "array",
-                                         "items": {
-                                             "type": "string"
-                                         }
-                                         },
-                            "sl_interjection": {"type": "array",
-                                                "items": {
-                                                    "type": "string"
-                                                }
-                                                },
-                            "en_outside": {"type": "string", "minLength": 1},
-                            "en_inside": {"type": "string", "minLength": 1},
-                            "en_day": {"type": "string", "minLength": 1},
-                            "en_night": {"type": "string", "minLength": 1},
-                        },
-                        "required": [
-                            "fi_sound_filename",
-                            "fi_sound_filepath",
-                            "fi_start_sound_time",
-                            "fi_end_sound_time",
-                            "fi_start_voice_time",
-                            "fi_end_voice_time",
-                            "li_speaker_info",
-                            "tc_text",
-                            "tl_trans_lang",
-                            "tl_trans_text",
-                            "tl_back_trans_lang",
-                            "tl_back_trans_text",
-                            # "sl_new_word", # not required
-                            # "sl_abbreviation_word", # not required
-                            # "sl_slang", # not required
-                            # "sl_mistake", # not required
-                            # "sl_again", # not required
-                            # "sl_interjection", # not required
-                            "en_outside",
-                            "en_inside",
-                            "en_day",
-                            "en_night",
-                        ]
-                    }
-                }
-            },
-            "required": [
-                "source",
-                "category",
-                "solved_copyright",
-                "origin_lang",
-                "fi_source_filename",
-                "fi_source_filepath",
-                "li_platform_info",
-                "li_location",
-                # "li_suject", # not required
-                # "li_summary", # not required 
-                "text_info"
-                
-            ]
-        }
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "contentsIdx": {
+      "type": "integer"
     },
-    "required": ["contents"]
+    "source": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string"
+    },
+    "solved_copyright": {
+      "type": "string"
+    },
+    "origin_lang_type": {
+      "type": "string"
+    },
+    "origin_lang": {
+      "type": "string"
+    },
+    "contentsName": {
+      "type": "string"
+    },
+    "fi_source_filename": {
+      "type": "string"
+    },
+    "fi_source_filepath": {
+      "type": "string"
+    },
+    "li_platform_info": {
+      "type": "string"
+    },
+    "li_subject": {
+      "type": "string"
+    },
+    "li_location": {
+      "type": "string"
+    },
+    "fi_sound_filename": {
+      "type": "string"
+    },
+    "fi_sound_filepath": {
+      "type": "string"
+    },
+    "li_total_video_time": {
+      "type": "number"
+    },
+    "li_total_voice_time": {
+      "type": "number"
+    },
+    "fi_start_voice_time": {
+      "type": "number"
+    },
+    "fi_end_voice_time": {
+      "type": "number"
+    },
+    "fi_duration_time": {
+      "type": "number"
+    },
+    "tc_text": {
+      "type": "string"
+    },
+    "tl_trans_lang": {
+      "type": "string"
+    },
+    "tl_trans_text": {
+      "type": "string"
+    },
+    "tl_back_trans_lang": {
+      "type": "string"
+    },
+    "tl_back_trans_text": {
+      "type": "string"
+    },
+    "speaker_tone": {
+      "type": "string"
+    },
+    "sl_new_word": {
+      "type": "array",
+      "items": {
+          "type": "string"
+      }
+    },
+    "sl_abbreviation_word": {
+      "type": "array",
+      "items": {
+          "type": "string"
+      }
+    },
+    "sl_slang": {
+      "type": "array",
+      "items": {
+          "type": "string"
+      }
+    },
+    "sl_mistake": {
+      "type": "array",
+      "items": {
+          "type": "string"
+      }
+    },
+    "sl_again": {
+      "type": "array",
+      "items": {
+          "type": "string"
+      }
+    },
+    "sl_interjection": {
+      "type": "array",
+      "items": {
+          "type": "string"
+      }
+    },
+    "place": {
+      "type": "string"
+    },
+    "en_outside": {
+      "type": "string"
+    },
+    "en_insdie": {
+      "type": "string"
+    },
+    "day_night": {
+      "type": "string"
+    },
+    "en_day": {
+      "type": "string"
+    },
+    "en_night": {
+      "type": "string"
+    },
+    "speaker_gender_type": {
+      "type": "string"
+    },
+    "speaker_gender": {
+      "type": "string"
+    },
+    "speaker_age_group_type": {
+      "type": "string"
+    },
+    "speaker_age_group": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "contentsIdx",
+    "source",
+    "category",
+    "solved_copyright",
+    "origin_lang_type",
+    "origin_lang",
+    "contentsName",
+    "fi_source_filename",
+    "fi_source_filepath",
+    "li_platform_info",
+    "li_subject",
+    "li_location",
+    "fi_sound_filename",
+    "fi_sound_filepath",
+    "li_total_video_time",
+    "li_total_voice_time",
+    "fi_start_voice_time",
+    "fi_end_voice_time",
+    "fi_duration_time",
+    "tc_text",
+    "tl_trans_lang",
+    "tl_trans_text",
+    "tl_back_trans_lang",
+    "tl_back_trans_text",
+    "speaker_tone",
+    "sl_new_word",
+    "sl_abbreviation_word",
+    "sl_slang",
+    "sl_mistake",
+    "sl_again",
+    "sl_interjection",
+    "place",
+    "en_outside",
+    "en_insdie",
+    "day_night",
+    "en_day",
+    "en_night",
+    "speaker_gender_type",
+    "speaker_gender",
+    "speaker_age_group_type",
+    "speaker_age_group"
+  ]
 }
 
 
