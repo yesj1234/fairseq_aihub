@@ -1,4 +1,4 @@
-# 이거 왜 만든거더라.. 기억이 안나버리네
+#mBART 에서 사용할 데이터 형식(json)으로 만들어주기
 import os
 import csv
 import json
@@ -29,7 +29,7 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--split_path", help="[split].tsv 파일 루트 경로")
-    parser.add_argument("--source_lang", help="원래 언어")
-    parser.add_argument("--target_lang", help="번역 언어")
+    parser.add_argument("--source_lang", help="lang code 한국어: ko 일본어: ja 중국어:zh")
+    parser.add_argument("--target_lang", help="lang code 한국어: ko 일본어: ja 중국어:zh")
     args = parser.parse_args()
     main(args)
