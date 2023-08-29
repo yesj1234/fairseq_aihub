@@ -4,11 +4,12 @@ import jsonschema
 from jsonschema import validate, ValidationError, Draft7Validator
 import argparse
 my_json_schema = {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Generated schema for Root",
   "type": "object",
   "properties": {
     "contentsIdx": {
-      "type": "integer"
+      "type": "string"
     },
     "source": {
       "type": "string"
@@ -50,19 +51,19 @@ my_json_schema = {
       "type": "string"
     },
     "li_total_video_time": {
-      "type": "number"
+      "type": "string"
     },
     "li_total_voice_time": {
-      "type": "number"
+      "type": "string"
     },
     "fi_start_voice_time": {
-      "type": "number"
+      "type": "string"
     },
     "fi_end_voice_time": {
-      "type": "number"
+      "type": "string"
     },
     "fi_duration_time": {
-      "type": "number"
+      "type": "string"
     },
     "tc_text": {
       "type": "string"
@@ -150,47 +151,47 @@ my_json_schema = {
     }
   },
   "required": [
-    "contentsIdx",
-    "source",
-    "category",
-    "solved_copyright",
-    "origin_lang_type",
-    "origin_lang",
-    "contentsName",
-    "fi_source_filename",
-    "fi_source_filepath",
-    "li_platform_info",
-    "li_subject",
-    "li_location",
-    "fi_sound_filename",
-    "fi_sound_filepath",
+    # "contentsIdx", 
+    "source", # required
+    "category", # required
+    "solved_copyright", # required
+    # "origin_lang_type",  
+    "origin_lang", # required
+    # "contentsName",  
+    "fi_source_filename", # required
+    "fi_source_filepath", # required
+    "li_platform_info", # required  
+    # "li_subject",
+    # "li_location",
+    "fi_sound_filename", # required
+    "fi_sound_filepath", # required
     "li_total_video_time",
     "li_total_voice_time",
-    "fi_start_voice_time",
-    "fi_end_voice_time",
+    "fi_start_voice_time", # required
+    "fi_end_voice_time", # required
     "fi_duration_time",
-    "tc_text",
-    "tl_trans_lang",
-    "tl_trans_text",
-    "tl_back_trans_lang",
-    "tl_back_trans_text",
-    "speaker_tone",
-    "sl_new_word",
-    "sl_abbreviation_word",
-    "sl_slang",
-    "sl_mistake",
-    "sl_again",
-    "sl_interjection",
-    "place",
-    "en_outside",
-    "en_insdie",
-    "day_night",
-    "en_day",
-    "en_night",
-    "speaker_gender_type",
-    "speaker_gender",
-    "speaker_age_group_type",
-    "speaker_age_group"
+    "tc_text", # required
+    "tl_trans_lang", # required
+    "tl_trans_text", # required
+    "tl_back_trans_lang", # required
+    "tl_back_trans_text", # required
+    "speaker_tone", # required
+    # "sl_new_word",
+    # "sl_abbreviation_word",
+    # "sl_slang",
+    # "sl_mistake",
+    # "sl_again",
+    # "sl_interjection",
+    # "place",
+    "en_outside", # required
+    "en_insdie", # required
+    "day_night", # required
+    "en_day", # required
+    "en_night", # required
+    "speaker_gender_type", # required
+    "speaker_gender", # required
+    "speaker_age_group_type", # required 
+    "speaker_age_group"# required
   ]
 }
 
