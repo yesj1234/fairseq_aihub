@@ -23,7 +23,8 @@ class SampleSpeech(datasets.GeneratorBasedBuilder):
     """Returns SplitGenerators."""
     VERSION = datasets.Version("0.0.1")
     def _split_generators(self, dl_manager: DownloadManager):
-        self.data_dir = os.path.abspath(os.path.expanduser(dl_manager.manual_dir))
+        self.data_dir = os.environ["DATA_DIR"]
+        self.audio_dir = os.environ["AUDIO_DIR"]
         return [
             datasets.SplitGenerator(
                 name=datasets.Split.TRAIN,
@@ -53,17 +54,17 @@ class SampleSpeech(datasets.GeneratorBasedBuilder):
             data = f.read().strip()
             for id_, row in enumerate(data.split("\n")):
                 path, sentence = tuple(row.split(" :: "))
-                if os.path.exists(os.path.join(self.data_dir, path)):
-                    with open(os.path.join(self.data_dir, path), 'rb') as audio_file:
+                if os.path.exists(os.path.join(self.audio_dir, path)):
+                    with open(os.path.join(self.audio_dir, path), 'rb') as audio_file:
                         audio_data = audio_file.read()
                     audio = {
-                        "path": os.path.join(self.data_dir, path),
+                        "path": os.path.join(self.audio_dir, path),
                         "bytes": audio_data,
                         "sampling_rate": 16_000
                     }
                     
                     yield id_, {
-                        "file": os.path.join(self.data_dir, path),
+                        "file": os.path.join(self.audio_dir, path),
                         "audio": audio,
                         "target_text": sentence,
                     }
