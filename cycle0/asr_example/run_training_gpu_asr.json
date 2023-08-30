@@ -12,7 +12,10 @@
   "train_split_name": "train",
   "audio_column_name": "audio",
   "text_column_name": "target_text",
-  "eval_metrics": "['cer', 'wer']",
+  "eval_metrics": [
+    "cer",
+    "wer"
+  ],
   "unk_token": "[UNK]",
   "pad_token": "[PAD]",
   "word_delimiter_token": "|",
@@ -20,6 +23,7 @@
   "do_train": true,
   "do_predict": true,
   "evaluation_strategy": "steps",
+  "eval_steps": 500,
   "per_device_train_batch_size": 16,
   "per_device_eval_batch_size": 8,
   "gradient_accumulation_steps": 2,
@@ -30,5 +34,16 @@
   "warmup_steps": 500,
   "save_total_limit": 2,
   "group_by_length": true,
-  "fp16": true
+  "fp16": true,
+  "chars_to_ignore": [
+    ",",
+    "?",
+    "!",
+    "%",
+    "(",
+    ")",
+    "-",
+    "'",
+    "~"
+  ]
 }
