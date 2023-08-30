@@ -14,7 +14,7 @@ class SampleSpeech(datasets.GeneratorBasedBuilder):
             features=datasets.Features(
                 {
                     "file": datasets.Value("string"),
-                    "sentence": datasets.Value("string"),
+                    "target_text": datasets.Value("string"),
                     "audio": datasets.Audio(sampling_rate=16_000)
                 }
             )
@@ -65,6 +65,6 @@ class SampleSpeech(datasets.GeneratorBasedBuilder):
                     yield id_, {
                         "file": os.path.join(self.data_dir, path),
                         "audio": audio,
-                        "sentence": sentence,
+                        "target_text": sentence,
                     }
                 
