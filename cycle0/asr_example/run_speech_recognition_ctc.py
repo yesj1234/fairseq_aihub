@@ -499,7 +499,6 @@ def main():
     with training_args.main_process_first(desc="dataset map special characters removal"):
         raw_datasets = raw_datasets.map(
             remove_special_characters,
-            remove_columns=[text_column_name],
             desc="remove special characters from datasets",
         )
 
