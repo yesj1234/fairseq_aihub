@@ -17,7 +17,7 @@ import sentencepiece as spm
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--model", required=True, help="sentencepiece model to use for encoding"
+        "--model", required=True, help="sentencepiece model to use for encoding. download the model from huggingface model hub facebook/mbart-large-cc25"
     )
     parser.add_argument(
         "--inputs", nargs="+", default=["-"], help="input files to filter/encode"
