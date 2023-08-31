@@ -1,7 +1,7 @@
 import argparse
 from glob import glob 
 from fairseq.data import Dictionary 
-from fariseq.tokenizer import tokenize_line 
+from fairseq.tokenizer import tokenize_line 
 
 def pad_dict(dict: Dictionary, num_extra_symbols: int, padding_factor: int=8):
 	i = 0

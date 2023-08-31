@@ -19,10 +19,10 @@ def main(args)->None:
 	data = torch.load(os.path.join(args.pre_train_dir, "model.pt"))
 	model = data["model"]
 	
-	mapping = List[int] = []
+	mapping:List[int] = []
 	for i in range(len(ft_dict)):
 		word = ft_dict[i]
-		mapping.append(pre_dict.indx(word))
+		mapping.append(pre_dict.index(word))
 	for name in ["encoder.embed_tokens.weight", "decoder.embed_tokens.weight"]:
 		pre_tensor:torch.Tensor = model[name]
 		ft_tensor = torch.zeros([len(ft_dict), 1024], dtype=pre_tensor.dtype, layout=pre_tensor.layout, device=pre_tensor.device)  

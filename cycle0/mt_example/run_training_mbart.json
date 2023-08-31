@@ -1,11 +1,13 @@
 {
-    "model_name_or_path": "facebook/mbart-large-cc25",
+    "model_name_or_path": "./pruned_model.pt",
+    "config_name": "facebook/mbart-large-cc25",
+    "tokenizer_name": "facebook/mbart-large-cc25",
     "source_lang": "en_XX",
     "target_lang": "ko_KR",
     "pad_to_max_length": true,
     "output_dir": "./tst-translation-output",
-    "per_device_train_batch_size": 1,
-    "per_device_eval_batch_size": 1,
+    "per_device_train_batch_size": 8,
+    "per_device_eval_batch_size": 8,
     "overwrite_output_dir": true,
     "do_train": true,
     "do_eval": true,
@@ -13,5 +15,10 @@
     "train_file": "/home/ubuntu/my_asr/cycle0/mt_example/train.json",
     "validation_file": "/home/ubuntu/my_asr/cycle0/mt_example/validation.json",
     "test_file": "/home/ubuntu/my_asr/cycle0/mt_example/test.json",
-    "num_train_epochs": 9
+    "num_train_epochs": 50,
+    "save_strategy": "steps",
+    "save_steps": 1000,
+    "save_total_limit": 5,
+    "warmup_steps": 500,
+    "fp16": true
 }
