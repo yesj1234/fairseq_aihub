@@ -35,14 +35,17 @@ from datasets import DatasetDict, load_dataset
 import transformers
 from transformers import (
     AutoConfig,
-    AutoFeatureExtractor,
-    AutoModelForCTC,
-    AutoProcessor,
-    AutoTokenizer,
+    # AutoFeatureExtractor,
+    Wav2Vec2FeatureExtractor,
+    # AutoModelForCTC,
+    Wav2Vec2ForCTC,
+    # AutoProcessor,
+    Wav2Vec2Processor,
+    # AutoTokenizer,
+    Wav2Vec2CTCTokenizer,
     HfArgumentParser,
     Trainer,
     TrainingArguments,
-    Wav2Vec2Processor,
     set_seed,
 )
 from transformers.trainer_utils import get_last_checkpoint, is_main_process
@@ -305,7 +308,7 @@ class DataCollatorCTCWithPadding:
             7.5 (Volta).
     """
 
-    processor: AutoProcessor
+    processor: Wav2Vec2Processor
     padding: Union[bool, str] = "longest"
     pad_to_multiple_of: Optional[int] = None
     pad_to_multiple_of_labels: Optional[int] = None
@@ -487,6 +490,7 @@ def main():
     chars_to_ignore_regex = (
         f'[{"".join(data_args.chars_to_ignore)}]' if data_args.chars_to_ignore is not None else None
     )
+    
     text_column_name = data_args.text_column_name
 
     def remove_special_characters(batch):
@@ -501,7 +505,6 @@ def main():
             remove_special_characters,
             desc="remove special characters from datasets",
         )
-
     # save special tokens for tokenizer
     word_delimiter_token = data_args.word_delimiter_token
     unk_token = data_args.unk_token
@@ -568,13 +571,13 @@ def main():
     # one local process can concurrently download model & vocab.
 
     # load feature_extractor and tokenizer
-    tokenizer = AutoTokenizer.from_pretrained(
+    tokenizer = Wav2Vec2CTCTokenizer.from_pretrained(
         tokenizer_name_or_path,
         token=data_args.token,
         trust_remote_code=data_args.trust_remote_code,
         **tokenizer_kwargs,
     )
-    feature_extractor = AutoFeatureExtractor.from_pretrained(
+    feature_extractor = Wav2Vec2FeatureExtractor.from_pretrained(
         model_args.model_name_or_path,
         cache_dir=model_args.cache_dir,
         token=data_args.token,
@@ -602,7 +605,7 @@ def main():
     )
 
     # create model
-    model = AutoModelForCTC.from_pretrained(
+    model = Wav2Vec2ForCTC.from_pretrained(
         model_args.model_name_or_path,
         cache_dir=model_args.cache_dir,
         config=config,
@@ -712,7 +715,7 @@ def main():
             config.save_pretrained(training_args.output_dir)
 
     try:
-        processor = AutoProcessor.from_pretrained(training_args.output_dir)
+        processor = Wav2Vec2Processor.from_pretrained(training_args.output_dir)
     except (OSError, KeyError):
         warnings.warn(
             "Loading a processor from a feature extractor config that does not"
