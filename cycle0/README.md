@@ -31,10 +31,9 @@ python3 2.tsv_to_json.py --split_path ./mt_split --source_lang ko --target_lang 
 
 3. **_preparing the data for model pruning_**. [tackling OOM issue while training with GPU](https://github.com/facebookresearch/fairseq/issues/2120)
 
-   **FIRST**, generate corpus data for mbart.
-
+   **FIRST**, generate corpus data for mbart.  
    FROM train.tsv TO train.ko train.en  
-   FROM test.tsv TO test.ko test.en
+   FROM test.tsv TO test.ko test.en  
    FROM validation.tsv TO validation.ko validation.en
 
    ```bash
