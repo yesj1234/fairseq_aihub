@@ -45,9 +45,9 @@ python3 2.tsv_to_json.py --split_path ./mt_split --source_lang ko --target_lang 
 
    **SECOND**, encode the generated corpus with sentencepiece
 
-   FROM train.ko train.en TO train.spm.ko train.spm.en
-   FROM test.ko test.en TO test.spm.ko test.spm.en
-   FROM validatioin.ko validatioin.en TO validatioin.spm.ko validatioin.spm.en
+   FROM train.ko train.en TO train.spm.ko train.spm.en  
+   FROM test.ko test.en TO test.spm.ko test.spm.en  
+   FROM validatioin.ko validatioin.en TO validatioin.spm.ko validatioin.spm.en  
    [DOWNLOAD the spm model](https://huggingface.co/facebook/mbart-large-cc25/tree/main) file maybe name sentence.bpe.model
    BEAWARE that the length of inputs and outputs must match.
 
@@ -59,7 +59,7 @@ python3 2.tsv_to_json.py --split_path ./mt_split --source_lang ko --target_lang 
    python3 spm_encode.py --model ./sentence.bpe.model --inputs $SPLITS_DIR/train.ko $SPLITS_DIR/train.en $SPLITS_DIR/test.ko $SPLITS_DIR/test.en $SPLITS_DIR/validation.ko $SPLITS_DIR/validation.en --outputs $SPLITS_DIR/train.spm.ko $SPLITS_DIR/train.spm.en $SPLITS_DIR/test.spm.ko $SPLITS_DIR/test.spm.en $SPLITS_DIR/validation.spm.ko $SPLITS_DIR/validation.spm.en
    ```
 
-   **THIRD**, build the vocab.txt from encoded spm splits (e.g. train.spm.ko train.spm.en)
+   **THIRD**, build the vocab.txt from encoded spm splits (e.g. train.spm.ko train.spm.en)  
    --langs argument is fixed argument with ar*AR,cs_CZ,de_DE,en_XX,es_XX,et_EE,fi_FI,fr_XX,gu_IN,hi_IN,it_IT,ja_XX,kk_KZ,ko_KR,lt_LT,lv_LV,my_MM,ne_NP,nl_XX,ro_RO,ru_RU,si_LK,tr_TR,vi_VN,zh_CN
    generated file will be saved as one \*\*\_dict.txt*\*\* file
 
@@ -69,7 +69,7 @@ python3 2.tsv_to_json.py --split_path ./mt_split --source_lang ko --target_lang 
    python3 build.py --corpus_data "./ft/*.spm.*" --langs ar_AR,cs_CZ,de_DE,en_XX,es_XX,et_EE,fi_FI,fr_XX,gu_IN,hi_IN,it_IT,ja_XX,kk_KZ,ko_KR,lt_LT,lv_LV,my_MM,ne_NP,nl_XX,ro_RO,ru_RU,si_LK,tr_TR,vi_VN,zh_CN --output ./ft/dict.txt
    ```
 
-   **FORTH**, Finally prune the model with generated **_dict.txt_** file
+   **FORTH**, Finally prune the model with generated **_dict.txt_** file  
    [DOWNlOAD the mbart-large-cc25 base model](https://huggingface.co/facebook/mbart-large-cc25/tree/main) file. Maybe named pytorch_model.bin
 
    ```bash
