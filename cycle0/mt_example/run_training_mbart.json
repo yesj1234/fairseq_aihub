@@ -16,9 +16,9 @@
     "validation_file": "/home/ubuntu/my_asr/cycle0/mt_example/validation.json",
     "test_file": "/home/ubuntu/my_asr/cycle0/mt_example/test.json",
     "num_train_epochs": 50,
-    "save_strategy": "steps",
-    "save_steps": 1000,
-    "save_total_limit": 5,
+    "save_strategy": "epochs",
+    "evaluation_strategy": "epochs",
+    "save_total_limit": 1,
     "warmup_steps": 500,
     "fp16": true
 }
