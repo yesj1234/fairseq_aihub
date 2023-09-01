@@ -2,7 +2,7 @@
 
 ## PREPROCESSING 산출물 DATA
 
-0. validation
+0. **_validation_**
 
 ```bash
 python3 0.json_validator.py --jsons /path/to/the/folder/containing/json/files
@@ -10,7 +10,7 @@ e.g.
 python3 0.json_validator.py --jsons ./output
 ```
 
-1. prepare_from_json_mt.py
+1. **_prepare_from_json_mt.py_**
 
 ```bash
 python3 1.prepare_from_json_mt.py --mt_dest_file /path/to/the/destination/folder --jsons /path/to/the/folder/containing/jsons
@@ -18,7 +18,7 @@ e.g.
 python3 1.prepare_from_json_mt.py --mt_dest_file ./mt_split --jsons ./output/한국어(KO)_영어(EN)
 ```
 
-2. tsv_to_json.py
+2. **_tsv_to_json.py_**
 
 ```bash
 # preparing json file that will be used in run_training_mbart.py.
@@ -29,7 +29,7 @@ e.g.
 python3 2.tsv_to_json.py --split_path ./mt_split --source_lang ko --target_lang en
 ```
 
-3. preparing the data for model pruning. [tackling OOM issue while training with GPU](https://github.com/facebookresearch/fairseq/issues/2120)
+3. **_preparing the data for model pruning_**. [tackling OOM issue while training with GPU](https://github.com/facebookresearch/fairseq/issues/2120)
 
    **FIRST**, generate corpus data for mbart.
    FROM train.tsv TO train.ko train.en  
@@ -104,7 +104,7 @@ python3 2.tsv_to_json.py --split_path ./mt_split --source_lang ko --target_lang 
 
 ## PREPROCESSING 산출물 DATA
 
-0. validation
+0. **_validation_**
 
 ```bash
 python3 0.json_validator.py --jsons /path/to/the/folder/containing/json/files
@@ -112,7 +112,7 @@ e.g.
 python3 0.json_validator.py --jsons ./output
 ```
 
-1. prepare_from_json_mt.py
+1. **_prepare_from_json_mt.py_**
 
 ```bash
 python3 1.prepare_from_json_mt.py --mt_dest_file /path/to/the/destination/folder --jsons /path/to/the/folder/containing/jsons
@@ -120,7 +120,7 @@ e.g.
 python3 1.prepare_from_json_mt.py --mt_dest_file ./mt_split --jsons ./output/한국어(KO)_영어(EN)
 ```
 
-2. refine_data.py
+2. **_refine_data.py_**
 
 Wav2Vec2 xls-r model
 
