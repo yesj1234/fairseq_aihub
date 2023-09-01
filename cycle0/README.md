@@ -48,7 +48,7 @@ python3 2.tsv_to_json.py --split_path ./mt_split --source_lang ko --target_lang 
    FROM train.ko train.en TO train.spm.ko train.spm.en  
    FROM test.ko test.en TO test.spm.ko test.spm.en  
    FROM validatioin.ko validatioin.en TO validatioin.spm.ko validatioin.spm.en  
-   [DOWNLOAD the spm model](https://huggingface.co/facebook/mbart-large-cc25/tree/main) file maybe name sentence.bpe.model
+   [DOWNLOAD the spm model](https://huggingface.co/facebook/mbart-large-cc25/tree/main) file maybe name sentence.bpe.model  
    BEAWARE that the length of inputs and outputs must match.
 
    ```bash
@@ -57,25 +57,31 @@ python3 2.tsv_to_json.py --split_path ./mt_split --source_lang ko --target_lang 
    e.g.
    export SPLITS_DIR=/home/ubuntu/contents/한국어_영어
    python3 spm_encode.py --model ./sentence.bpe.model --inputs $SPLITS_DIR/train.ko $SPLITS_DIR/train.en $SPLITS_DIR/test.ko $SPLITS_DIR/test.en $SPLITS_DIR/validation.ko $SPLITS_DIR/validation.en --outputs $SPLITS_DIR/train.spm.ko $SPLITS_DIR/train.spm.en $SPLITS_DIR/test.spm.ko $SPLITS_DIR/test.spm.en $SPLITS_DIR/validation.spm.ko $SPLITS_DIR/validation.spm.en
+   export SPLITS_DIR=/home/ubuntu/contents/한국어_일본어
+   python3 spm_encode.py --model ./sentence.bpe.model --inputs $SPLITS_DIR/train.ko $SPLITS_DIR/train.ja $SPLITS_DIR/test.ko $SPLITS_DIR/test.ja $SPLITS_DIR/validation.ko $SPLITS_DIR/validation.ja --outputs $SPLITS_DIR/train.spm.ko $SPLITS_DIR/train.spm.ja $SPLITS_DIR/test.spm.ko $SPLITS_DIR/test.spm.ja $SPLITS_DIR/validation.spm.ko $SPLITS_DIR/validation.spm.ja
+   export SPLITS_DIR=/home/ubuntu/contents/한국어_중국어
+   python3 spm_encode.py --model ./sentence.bpe.model --inputs $SPLITS_DIR/train.ko $SPLITS_DIR/train.zh $SPLITS_DIR/test.ko $SPLITS_DIR/test.zh $SPLITS_DIR/validation.ko $SPLITS_DIR/validation.zh --outputs $SPLITS_DIR/train.spm.ko $SPLITS_DIR/train.spm.zh $SPLITS_DIR/test.spm.ko $SPLITS_DIR/test.spm.zh $SPLITS_DIR/validation.spm.ko $SPLITS_DIR/validation.spm.zh
+
    ```
 
    **THIRD**, build the vocab.txt from encoded spm splits (e.g. train.spm.ko train.spm.en)  
-   --langs argument is fixed argument with ar*AR,cs_CZ,de_DE,en_XX,es_XX,et_EE,fi_FI,fr_XX,gu_IN,hi_IN,it_IT,ja_XX,kk_KZ,ko_KR,lt_LT,lv_LV,my_MM,ne_NP,nl_XX,ro_RO,ru_RU,si_LK,tr_TR,vi_VN,zh_CN
-   generated file will be saved as one \*\*\_dict.txt*\*\* file
+   --langs argument is fixed argument with "ar_AR,cs_CZ,de_DE,en_XX,es_XX,et_EE,fi_FI,fr_XX,gu_IN,hi_IN,it_IT,ja_XX,kk_KZ,ko_KR,lt_LT,lv_LV,my_MM,ne_NP,nl_XX,ro_RO,ru_RU,si_LK,tr_TR,vi_VN,zh_CN"  
+   generated file will be saved as one dict.txt file  
+   [DONWLOAD THE PRETRAINED DICT](https://github.com/facebookresearch/fairseq/blob/main/examples/mbart/README.md)
 
    ```bash
-   python3 build.py --corpus_data "/path/to/spm_splits_with_regex" --langs ar_AR,cs_CZ,de_DE,en_XX,es_XX,et_EE,fi_FI,fr_XX,gu_IN,hi_IN,it_IT,ja_XX,kk_KZ,ko_KR,lt_LT,lv_LV,my_MM,ne_NP,nl_XX,ro_RO,ru_RU,si_LK,tr_TR,vi_VN,zh_CN --output /path/to/the/folder/dict.txt
+   python3 build.py --corpus-data "/path/to/spm_splits_with_regex" --langs ar_AR,cs_CZ,de_DE,en_XX,es_XX,et_EE,fi_FI,fr_XX,gu_IN,hi_IN,it_IT,ja_XX,kk_KZ,ko_KR,lt_LT,lv_LV,my_MM,ne_NP,nl_XX,ro_RO,ru_RU,si_LK,tr_TR,vi_VN,zh_CN --output /path/to/the/folder/dict.txt
    e.g.
-   python3 build.py --corpus_data "./ft/*.spm.*" --langs ar_AR,cs_CZ,de_DE,en_XX,es_XX,et_EE,fi_FI,fr_XX,gu_IN,hi_IN,it_IT,ja_XX,kk_KZ,ko_KR,lt_LT,lv_LV,my_MM,ne_NP,nl_XX,ro_RO,ru_RU,si_LK,tr_TR,vi_VN,zh_CN --output ./ft/dict.txt
+   export SPLITS_DIR=/home/ubuntu/path/to/the/splits_dir
+   python3 build.py --corpus-data "$SPLITS_DIR/*.spm.*" --langs ar_AR,cs_CZ,de_DE,en_XX,es_XX,et_EE,fi_FI,fr_XX,gu_IN,hi_IN,it_IT,ja_XX,kk_KZ,ko_KR,lt_LT,lv_LV,my_MM,ne_NP,nl_XX,ro_RO,ru_RU,si_LK,tr_TR,vi_VN,zh_CN --output ./ft/dict.txt
    ```
 
    **FORTH**, Finally prune the model with generated **_dict.txt_** file  
    [DOWNlOAD the mbart-large-cc25 base model](https://huggingface.co/facebook/mbart-large-cc25/tree/main) file. Maybe named pytorch_model.bin
 
    ```bash
-   python trim_mbart.py --pre-train-dir /path/to/the/folder/containing/model_to_be_pruned/ --ft-dict /path/to/the/folder/containing/dict.txt --langs ar_AR,cs_CZ,de_DE,en_XX,es_XX,et_EE,fi_FI,fr_XX,gu_IN,hi_IN,it_IT,ja_XX,kk_KZ,ko_KR,lt_LT,lv_LV,my_MM,ne_NP,nl_XX,ro_RO,ru_RU,si_LK,tr_TR,vi_VN,zh_CN --output /path/to/the/folder/pruned_model
    e.g.
-   python trim_mbart.py --pre-train-dir ./mbart.cc25 --ft-dict ./ft/dict.xt --langs ar_AR,cs_CZ,de_DE,en_XX,es_XX,et_EE,fi_FI,fr_XX,gu_IN,hi_IN,it_IT,ja_XX,kk_KZ,ko_KR,lt_LT,lv_LV,my_MM,ne_NP,nl_XX,ro_RO,ru_RU,si_LK,tr_TR,vi_VN,zh_CN --output ./ft/model.pt
+   python3 prune_mbart.py --pre-train-dir /home/ubuntu/mbart.cc25.v2 --ft-dict /home/ubuntu/contents/한국어_일본어/dict.txt --langs ar_AR,cs_CZ,de_DE,en_XX,es_XX,et_EE,fi_FI,fr_XX,gu_IN,hi_IN,it_IT,ja_XX,kk_KZ,ko_KR,lt_LT,lv_LV,my_MM,ne_NP,nl_XX,ro_RO,ru_RU,si_LK,tr_TR,vi_VN,zh_CN --output_dir ../ --output_model_name pruned_model_ko-ja.pt
    ```
 
    **FIFTH**, Since I'm using transformers library source code [run_translation.py](https://github.com/huggingface/transformers/blob/main/examples/pytorch/translation/run_translation.py), needs to load the correct model and configuration and tokenizer.
