@@ -29,21 +29,21 @@ class SampleSpeech(datasets.GeneratorBasedBuilder):
             datasets.SplitGenerator(
                 name=datasets.Split.TRAIN,
                 gen_kwargs={
-                    "filepath": os.path.join(self.data_dir, "train.tsv"),
+                    "filepath": os.path.join(self.data_dir, "train_refined.tsv"),
                     "split": "train"
                 }
             ),
             datasets.SplitGenerator(
                 name=datasets.Split.TEST,
                 gen_kwargs={
-                    "filepath": os.path.join(self.data_dir, "test.tsv"),
+                    "filepath": os.path.join(self.data_dir, "test_refined.tsv"),
                     "split": "test"
                 }
             ),
             datasets.SplitGenerator(
                 name=datasets.Split.VALIDATION,
                 gen_kwargs={
-                    "filepath": os.path.join(self.data_dir, "validation.tsv"),
+                    "filepath": os.path.join(self.data_dir, "validation_refined.tsv"),
                     "split": "validation"
                 }
             )

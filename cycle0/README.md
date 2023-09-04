@@ -10,7 +10,7 @@ e.g.
 python3 0.json_validator.py --jsons ./output
 ```
 
-1. **_prepare_from_json_mt.py_** and **_prepare_from_json_asr.py_**
+1. **_prepare_from_json_mt.py_**
 
 ```bash
 python3 1.prepare_from_json_mt.py --mt_dest_folder /path/to/the/destination/folder --jsons /path/to/the/folder/containing/jsons
@@ -136,5 +136,23 @@ python3 1.prepare_from_json_asr.py --asr_dest_folder ./asr_split --jsons $SPLITS
 Wav2Vec2 xls-r model
 
 ```bash
+python3 refine_data.py --tsv_splits_dir /path/to/the/tsv/splits
+e.g.
+python3 refine_data.py --tsv_splits_dir ../asr_split
+```
 
+3. export the tsv file path and audio folder path for sample_speech.py to correctly load the data from local.
+
+```bash
+export DATA_DIR=/path/to/the/refined_splits
+export AUDIO_DIR=/path/to/the/audio/folder
+e.g.
+export DATA_DIR=/home/ubuntu/my_asr/cycle0/asr_example/asr_split
+export AUDIO_DIR=/home/ubuntu/output
+```
+
+4. run the training shell script
+
+```bash
+bash run_speech_recognition_ctc.bash
 ```

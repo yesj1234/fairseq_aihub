@@ -51,7 +51,7 @@ CATEGORY:Dict[str, str] = {
 def get_neccesary_info(json_file):
     def _replace_path(path):
         for key in CATEGORY:
-            path = path.replace(key, CATEGORY[key])
+            path = path.replace(CATEGORY[key], key)
         return path
     json_data = json.load(json_file)
     path = json_data["fi_sound_filepath"].split("/")[-5:]

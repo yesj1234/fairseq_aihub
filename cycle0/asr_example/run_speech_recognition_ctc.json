@@ -1,5 +1,5 @@
 {
-  "model_name_or_path": "facebook/wav2vec2-base",
+  "model_name_or_path": "facebook/wav2vec2-large-xlsr-53",
   "overwrite_output_dir": true,
   "freeze_feature_encoder": true,
   "attention_dropout": 0.1,
