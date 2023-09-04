@@ -31,6 +31,13 @@ python3 2.tsv_to_json.py --split_path ./mt_split --source_lang ko --target_lang 
 
 3. **_preparing the data for model pruning_**. [tackling OOM issue while training with GPU](https://github.com/facebookresearch/fairseq/issues/2120)
 
+   download the base model mbart.cc25.v2. the folder contains model.pt, dict.txt, sentence.bpe.model
+
+   ```
+   wget https://dl.fbaipublicfiles.com/fairseq/models/mbart/mbart.cc25.v2.tar.gz
+   tar -xzvf mbart.CC25.tar.gz
+   ```
+
    **FIRST**, generate corpus data for mbart.  
    FROM train.tsv TO train.ko train.en  
    FROM test.tsv TO test.ko test.en  
@@ -48,7 +55,6 @@ python3 2.tsv_to_json.py --split_path ./mt_split --source_lang ko --target_lang 
    FROM train.ko train.en TO train.spm.ko train.spm.en  
    FROM test.ko test.en TO test.spm.ko test.spm.en  
    FROM validatioin.ko validatioin.en TO validatioin.spm.ko validatioin.spm.en  
-   [DOWNLOAD the spm model](https://huggingface.co/facebook/mbart-large-cc25/tree/main) file maybe name sentence.bpe.model  
    BEAWARE that the length of inputs and outputs must match.
 
    ```bash
@@ -66,8 +72,7 @@ python3 2.tsv_to_json.py --split_path ./mt_split --source_lang ko --target_lang 
 
    **THIRD**, build the vocab.txt from encoded spm splits (e.g. train.spm.ko train.spm.en)  
    --langs argument is fixed argument with "ar_AR,cs_CZ,de_DE,en_XX,es_XX,et_EE,fi_FI,fr_XX,gu_IN,hi_IN,it_IT,ja_XX,kk_KZ,ko_KR,lt_LT,lv_LV,my_MM,ne_NP,nl_XX,ro_RO,ru_RU,si_LK,tr_TR,vi_VN,zh_CN"  
-   generated file will be saved as one dict.txt file  
-   [DONWLOAD THE PRETRAINED DICT](https://github.com/facebookresearch/fairseq/blob/main/examples/mbart/README.md)
+   generated file will be saved as one dict.txt file
 
    ```bash
    python3 build.py --corpus-data "/path/to/spm_splits_with_regex" --langs ar_AR,cs_CZ,de_DE,en_XX,es_XX,et_EE,fi_FI,fr_XX,gu_IN,hi_IN,it_IT,ja_XX,kk_KZ,ko_KR,lt_LT,lv_LV,my_MM,ne_NP,nl_XX,ro_RO,ru_RU,si_LK,tr_TR,vi_VN,zh_CN --output /path/to/the/folder/dict.txt
@@ -76,12 +81,10 @@ python3 2.tsv_to_json.py --split_path ./mt_split --source_lang ko --target_lang 
    python3 build.py --corpus-data "$SPLITS_DIR/*.spm.*" --langs ar_AR,cs_CZ,de_DE,en_XX,es_XX,et_EE,fi_FI,fr_XX,gu_IN,hi_IN,it_IT,ja_XX,kk_KZ,ko_KR,lt_LT,lv_LV,my_MM,ne_NP,nl_XX,ro_RO,ru_RU,si_LK,tr_TR,vi_VN,zh_CN --output ./ft/dict.txt
    ```
 
-   **FORTH**, Finally prune the model with generated **_dict.txt_** file  
-   [DOWNlOAD the mbart-large-cc25 base model](https://huggingface.co/facebook/mbart-large-cc25/tree/main) file. Maybe named pytorch_model.bin
+   **FORTH**, Finally prune the model with generated **_dict.txt_** file
 
    ```bash
-   e.g.
-   python3 prune_mbart.py --pre-train-dir /home/ubuntu/mbart.cc25.v2 --ft-dict /home/ubuntu/contents/한국어_일본어/dict.txt --langs ar_AR,cs_CZ,de_DE,en_XX,es_XX,et_EE,fi_FI,fr_XX,gu_IN,hi_IN,it_IT,ja_XX,kk_KZ,ko_KR,lt_LT,lv_LV,my_MM,ne_NP,nl_XX,ro_RO,ru_RU,si_LK,tr_TR,vi_VN,zh_CN --output_dir ../ --output_model_name pruned_model_ko-ja.pt
+   python3 prune_mbart.py --pre-dict /home/ubuntu/mbart.cc25.v2/dict.txt --ft-dict ../ft/dict.txt --langs ar_AR,cs_CZ,de_DE,en_XX,es_XX,et_EE,fi_FI,fr_XX,gu_IN,hi_IN,it_IT,ja_XX,kk_KZ,ko_KR,lt_LT,lv_LV,my_MM,ne_NP,nl_XX,ro_RO,ru_RU,si_LK,tr_TR,vi_VN,zh_CN --output ../reduced_model
    ```
 
    **FIFTH**, Since I'm using transformers library source code [run_translation.py](https://github.com/huggingface/transformers/blob/main/examples/pytorch/translation/run_translation.py), needs to load the correct model and configuration and tokenizer.
