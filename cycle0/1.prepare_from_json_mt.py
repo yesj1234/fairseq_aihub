@@ -62,7 +62,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mt_dest_file", type=str, required=True,
+    parser.add_argument("--mt_dest_folder", type=str, required=True,
                         help="folder that will contain all the data for mt model")
     parser.add_argument("--jsons", type=str, required=True,
                         help="folder path that has json files inside of it")

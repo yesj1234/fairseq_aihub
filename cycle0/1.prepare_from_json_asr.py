@@ -96,7 +96,7 @@ def main(args):
             
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--asr_dest_file", type=str, required=True, help="folder that will contain all the data for asr model")
+    parser.add_argument("--asr_dest_folder", type=str, required=True, help="folder that will contain all the data for asr model")
     parser.add_argument("--jsons", type=str, required=True, help="folder path that has json files inside of it")
     args = parser.parse_args()
     main(args)

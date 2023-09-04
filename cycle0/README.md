@@ -10,12 +10,13 @@ e.g.
 python3 0.json_validator.py --jsons ./output
 ```
 
-1. **_prepare_from_json_mt.py_**
+1. **_prepare_from_json_mt.py_** and **_prepare_from_json_asr.py_**
 
 ```bash
-python3 1.prepare_from_json_mt.py --mt_dest_file /path/to/the/destination/folder --jsons /path/to/the/folder/containing/jsons
+python3 1.prepare_from_json_mt.py --mt_dest_folder /path/to/the/destination/folder --jsons /path/to/the/folder/containing/jsons
 e.g.
-python3 1.prepare_from_json_mt.py --mt_dest_file ./mt_split --jsons ./output/한국어(KO)_영어(EN)
+python3 1.prepare_from_json_mt.py --mt_dest_folder ./mt_split --jsons ./output/한국어(KO)_영어(EN)
+
 ```
 
 2. **_tsv_to_json.py_**
@@ -122,12 +123,12 @@ e.g.
 python3 0.json_validator.py --jsons ./output
 ```
 
-1. **_prepare_from_json_mt.py_**
+1. **_prepare_from_json_asr.py_**
 
 ```bash
-python3 1.prepare_from_json_mt.py --mt_dest_file /path/to/the/destination/folder --jsons /path/to/the/folder/containing/jsons
+python3 1.prepare_from_json_asr.py --asr_dest_folder /path/to/the/destination/folder --jsons /path/to/the/folder/containing/jsons
 e.g.
-python3 1.prepare_from_json_mt.py --mt_dest_file ./mt_split --jsons ./output/한국어(KO)_영어(EN)
+python3 1.prepare_from_json_asr.py --asr_dest_folder ./asr_split --jsons $SPLITS_DIR
 ```
 
 2. **_refine_data.py_**
