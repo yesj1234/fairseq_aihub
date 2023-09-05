@@ -17,7 +17,7 @@ def main(args):
             token = os.environ["HUGGINGFACE_TOKEN"])
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--repo_id", help="huggingface repo id")
+    parser.add_argument("--repo_id", help="huggingface repo id. yesj1234/[model_name]_cycle[#]_[lang]")
     parser.add_argument("--model_dir", help="folder path containing model checkpoint")
     parser.add_argument("--model_card", help="path to model card")
     args = parser.parse_args()

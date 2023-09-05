@@ -111,6 +111,8 @@ python3 2.tsv_to_json.py --split_path ./mt_split --source_lang ko --target_lang 
    bash run_training_mbart.sh
    ```
 
+## INFERENCE
+
 # ASR EXAMPLE
 
 ## PREPROCESSING 산출물 DATA

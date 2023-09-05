@@ -62,7 +62,7 @@ def get_neccesary_info(json_file):
 
 
 def main(args):
-    os.makedirs(os.path.join(args.asr_dest_file, "asr_split"), exist_ok=True)
+    os.makedirs(os.path.join(args.asr_dest_folder, "asr_split"), exist_ok=True)
 
     sound_file_paths, sound_file_transcriptions = [], []
     for root, dir, files in os.walk(args.jsons):
@@ -84,9 +84,9 @@ def main(args):
     assert len(sound_file_path_test) == len(transcription_test),  "test split 길이 안맞음."
     assert len(sound_file_path_validate) == len(transcription_validate),  "validate split 길이 안맞음."
                     
-    with open(f"{os.path.join(args.asr_dest_file, 'asr_split','train.tsv')}", "a+", encoding="utf-8") as asr_train, \
-        open(f"{os.path.join(args.asr_dest_file, 'asr_split','test.tsv')}", "a+", encoding="utf-8") as asr_test, \
-        open(f"{os.path.join(args.asr_dest_file, 'asr_split','validation.tsv')}", "a+", encoding="utf-8") as asr_validate:
+    with open(f"{os.path.join(args.asr_dest_folder, 'asr_split','train.tsv')}", "a+", encoding="utf-8") as asr_train, \
+        open(f"{os.path.join(args.asr_dest_folder, 'asr_split','test.tsv')}", "a+", encoding="utf-8") as asr_test, \
+        open(f"{os.path.join(args.asr_dest_folder, 'asr_split','validation.tsv')}", "a+", encoding="utf-8") as asr_validate:
         for i in range(len(sound_file_path_train)-1):
             asr_train.write(f"{sound_file_path_train[i]} :: {transcription_train[i]}\n")
         for i in range(len(sound_file_path_test)-1):
