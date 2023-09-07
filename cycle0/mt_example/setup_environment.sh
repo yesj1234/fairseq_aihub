@@ -27,6 +27,6 @@ pip install --upgrade protobuf
 
 # download the base model for model pruning
 cd ~ 
-wget https://dl.fbaipublicfiles.com/fairseq/models/mbart/mbart.cc25.v2.tar.gz 
+wget https://dl.fbaipublicfiles.com/fairseq/models/mbart/mbart.cc25.v2.tar.gz
 tar -xvzf mbart.cc25.v2.tar.gz
 
