@@ -517,7 +517,7 @@ def main():
         return
 
     # 8. Load Metric
-    metric = evaluate.load("wer")
+    metric = evaluate.load("cer")
 
     def compute_metrics(pred):
         pred_ids = pred.predictions
@@ -530,7 +530,7 @@ def main():
 
         wer = metric.compute(predictions=pred_str, references=label_str)
 
-        return {"wer": wer}
+        return {"cer": wer}
 
     # 9. Create a single speech processor
     # make sure all processes wait until data is saved

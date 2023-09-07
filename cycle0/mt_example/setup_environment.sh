@@ -12,7 +12,7 @@ sudo apt-get install -y cuda
 sudo apt install -y python3-pip 
 
 # 4. install python libraries 
-pip install transformers datasets torch torchaudio numpy evaluate
+pip install transformers datasets torch torchaudio numpy evaluate fairseq
 pip install -U accelerate 
 pip install --upgrade urllib3 requests
 pip install sentencepiece sacrebleu
@@ -28,4 +28,5 @@ pip install --upgrade protobuf
 # download the base model for model pruning
 cd ~ 
 wget https://dl.fbaipublicfiles.com/fairseq/models/mbart/mbart.cc25.v2.tar.gz 
-tar -xzvf mbart.CC25.tar.gz
+tar -xvzf mbart.cc25.v2.tar.gz
+

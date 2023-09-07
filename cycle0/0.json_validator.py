@@ -56,6 +56,9 @@ my_json_schema = {
     "li_total_voice_time": {
       "type": "string"
     },
+    "li_total_speaker_num": {
+      "type": "string"
+    },
     "fi_start_voice_time": {
       "type": "string"
     },
@@ -165,8 +168,9 @@ my_json_schema = {
     # "li_location",
     "fi_sound_filename", # required
     "fi_sound_filepath", # required
-    "li_total_video_time",
-    "li_total_voice_time",
+    "li_total_video_time", # required
+    "li_total_voice_time", # required
+    "li_total_speaker_num", # required
     "fi_start_voice_time", # required
     "fi_end_voice_time", # required
     "fi_duration_time",

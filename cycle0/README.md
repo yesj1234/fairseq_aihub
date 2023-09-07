@@ -79,7 +79,7 @@ python3 2.tsv_to_json.py --split_path ./mt_split --source_lang ko --target_lang 
    python3 build.py --corpus-data "/path/to/spm_splits_with_regex" --langs ar_AR,cs_CZ,de_DE,en_XX,es_XX,et_EE,fi_FI,fr_XX,gu_IN,hi_IN,it_IT,ja_XX,kk_KZ,ko_KR,lt_LT,lv_LV,my_MM,ne_NP,nl_XX,ro_RO,ru_RU,si_LK,tr_TR,vi_VN,zh_CN --output /path/to/the/folder/dict.txt
    e.g.
    export SPLITS_DIR=/home/ubuntu/path/to/the/splits_dir
-   python3 build.py --corpus-data "$SPLITS_DIR/*.spm.*" --langs ar_AR,cs_CZ,de_DE,en_XX,es_XX,et_EE,fi_FI,fr_XX,gu_IN,hi_IN,it_IT,ja_XX,kk_KZ,ko_KR,lt_LT,lv_LV,my_MM,ne_NP,nl_XX,ro_RO,ru_RU,si_LK,tr_TR,vi_VN,zh_CN --output ./ft/dict.txt
+   python3 build.py --corpus-data "$SPLITS_DIR/*.spm.*" --langs ar_AR,cs_CZ,de_DE,en_XX,es_XX,et_EE,fi_FI,fr_XX,gu_IN,hi_IN,it_IT,ja_XX,kk_KZ,ko_KR,lt_LT,lv_LV,my_MM,ne_NP,nl_XX,ro_RO,ru_RU,si_LK,tr_TR,vi_VN,zh_CN --output ../ft/dict.txt
    ```
 
    **FORTH**, Finally prune the model with generated **_dict.txt_** file
