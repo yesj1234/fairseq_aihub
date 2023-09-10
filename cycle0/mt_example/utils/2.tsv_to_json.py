@@ -16,9 +16,9 @@ def main(args):
                 with open(os.path.join(root, file), "r+", encoding="utf-8") as f:
                     split = csv.reader(f, delimiter="\n")
                     for row in split:
-                        print(row)
-                        source_lang, target_lang = row[0].split(" :: ")
-                        rows.append({f"{args.source_lang}": source_lang, f"{args.target_lang}": target_lang})
+                        if row:
+                            source_lang, target_lang = row[0].split(" :: ")
+                            rows.append({f"{args.source_lang}": source_lang, f"{args.target_lang}": target_lang})
                 new_json["translation"] = rows
                 #3. dump split.json
                 with open(f"{split_name}.json", "w+", encoding="utf-8") as js:

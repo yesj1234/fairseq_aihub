@@ -473,7 +473,6 @@ def main():
         )
 
     def preprocess_function(examples):
-        print(examples)
         inputs = [ex[source_lang] for ex in examples["translation"][0]]
         targets = [ex[target_lang] for ex in examples["translation"][0]]
         inputs = [prefix + inp for inp in inputs]
@@ -578,7 +577,8 @@ def main():
 
         # Some simple post-processing
         decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
-
+        print(f"Decoded_preds: {decoded_preds}")
+        print(f"Decoded_labels: {decoded_labels}")
         result = metric.compute(predictions=decoded_preds, references=decoded_labels)
         result = {"bleu": result["score"]}
 

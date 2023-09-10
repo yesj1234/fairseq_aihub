@@ -17,9 +17,10 @@ def main(args):
                         tsv_reader = csv.reader(split_file, delimiter = '\t')
                         src_lines, tgt_lines = [], []
                         for row in tsv_reader:
-                            src_line, tgt_line = row[0].split(" :: ")    
-                            src_lines.append(src_line)
-                            tgt_lines.append(tgt_line)
+                            if row:
+                                src_line, tgt_line = row[0].split(" :: ")    
+                                src_lines.append(src_line)
+                                tgt_lines.append(tgt_line)
                         with open(os.path.join(root, f"{split}.{args.source_lang}"), "w+", encoding="utf-8") as src_new, open(os.path.join(root, f"{split}.{args.target_lang}"), "w+", encoding="utf-8") as tgt_new:
                             for i in range(len(src_lines)):
                                 src_new.write(f"{src_lines[i]}\n")
