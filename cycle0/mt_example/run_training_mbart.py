@@ -58,6 +58,16 @@ check_min_version("4.31.0")
 require_version("datasets>=1.8.0", "To fix: pip install -r examples/pytorch/translation/requirements.txt")
 
 logger = logging.getLogger(__name__)
+fh_formatter = logging.Formatter(
+    fmt = '%(asctime)s|%(name)s|%(message)s',
+    datefmt = '%Y-%m-%d %H:%M:%S'
+)
+file_handler = logging.FileHandler("model_predictions.log")
+file_handler.setFormatter(fh_formatter)
+file_handler.setLevel(logging.CRITICAL)
+logger.addHandler(file_handler)
+
+
 
 # A list of all multilingual tokenizer which require src_lang and tgt_lang attributes.
 MULTILINGUAL_TOKENIZERS = [MBartTokenizer, MBartTokenizerFast, MBart50Tokenizer, MBart50TokenizerFast, M2M100Tokenizer]
@@ -577,14 +587,17 @@ def main():
 
         # Some simple post-processing
         decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
-        print(f"Decoded_preds: {decoded_preds}")
-        print(f"Decoded_labels: {decoded_labels}")
+        
+        for pred, label in zip(decoded_preds, decoded_labels):
+            logger.critical(f"predicition: {decoded_preds}")
+            logger.critical(f"reference  : {decoded_labels[0]}")
+        
         result = metric.compute(predictions=decoded_preds, references=decoded_labels)
         result = {"bleu": result["score"]}
-
         prediction_lens = [np.count_nonzero(pred != tokenizer.pad_token_id) for pred in preds]
         result["gen_len"] = np.mean(prediction_lens)
         result = {k: round(v, 4) for k, v in result.items()}
+        logger.critical(f"result: {result}")
         return result
 
     # Initialize our Trainer

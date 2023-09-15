@@ -2,14 +2,28 @@ from transformers import MBartTokenizer, MBartForConditionalGeneration
 from evaluate import load
 import os 
 import argparse
+import logging 
 
 
 def main(args):
-    def postprocess_text(preds, labels):
-        preds = [pred.strip() for pred in preds]
-        labels = [label.strip() for label in labels]
+    logger = logging.getLogger("BLEU_GENERATOR")
+    logger.setLevel(logging.INFO)
+    logging.basicConfig(
+        format='%(asctime)s-%(message)s',
+        datefmt='%H:%M:%S'
+    )
 
-        return preds, labels
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    file_handler = logging.FileHandler(filename='blue.log', encoding='utf-8')
+    file_handler.setLevel(logging.INFO)
+    file_formatter = logging.Formatter(
+        '%(asctime)s|%(name)s|%(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
+    file_handler.setFormatter(file_formatter)
+    logger.addHandler(console_handler)
+    logger.addHandler(file_handler)
     
     
     inputs = []
@@ -43,13 +57,12 @@ def main(args):
         decoded_ref = tokenizer.decode(encoded_reference["input_ids"][0], skip_special_tokens=True)
         output_predictions.append(decoded_pred)
         output_references.append(decoded_ref)
-        print(f"decoded_pred: {decoded_pred}")
-        print(f"decoded_ref : {decoded_ref}")
+        logger.info(f"Prediction: {decoded_pred}")
+        logger.info(f"Reference : {decoded_ref}")
+
         
     result = metric.compute(predictions=output_predictions, references=output_references)
-    # result = metric.compute(predictions=output_predictions, references=references)
-
-    print(result)        
+    logger.info(f"result: {result}")    
     
 
 
@@ -60,6 +73,8 @@ if __name__ == "__main__":
     parser.add_argument("--device", default="cpu", help="cuda if gpu is available")
     parser.add_argument("--src_lang", required=True, default="ko_KR")
     parser.add_argument("--tgt_lang", required=True, default="en_XX")
+    # parser.add_argument("--log_file", required=True)
     args = parser.parse_args()
     main(args)
+
 
