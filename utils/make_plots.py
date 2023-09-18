@@ -3,9 +3,12 @@ import json
 import matplotlib.pylot as plt 
 import numpy as np 
 import os
-
+import argparse
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--jsons", help="root folder path containing jsons")
+    args = parser.parse_args()
     # 전체 데이터 받아오기    
     jsons = [] 
     for root, dir, files in os.walk(args.jsons):
