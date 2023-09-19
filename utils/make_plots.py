@@ -1,27 +1,37 @@
 import pandas as pd
 import json
-import matplotlib.pylot as plt 
+import matplotlib.pyplot as plt 
 import numpy as np 
 import os
 import argparse
 
+plt.rc('font', family = 'NanumBarunGothic')
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--jsons", help="root folder path containing jsons")
+    parser.add_argument("--save_dir", help="root folder path to save generated graphs. Pass an absolute path", default = os.path.curdir)
+    parser.add_argument("--from_csv", help="whether to generate plots from existing dataframe.")
     args = parser.parse_args()
     # 전체 데이터 받아오기    
-    jsons = [] 
-    for root, dir, files in os.walk(args.jsons):
-        if files:
-            for file in files:
-                _, ext = os.path.splitext(file)
-                if ext == ".json":
-                    with open(os.path.join(root, file), "r+", encoding="utf-8") as f:
-                        json_file = json.load(f)
-                        jsons.append(json_file)
-    
-    df = pd.DataFrame(jsons)
-    
+    if args.jsons:
+        jsons = [] 
+        for root, dir, files in os.walk(args.jsons):
+            if files:
+                for file in files:
+                    _, ext = os.path.splitext(file)
+                    if ext == ".json":
+                        with open(os.path.join(root, file), "r+", encoding="utf-8") as f:
+                            json_file = json.load(f)
+                            jsons.append(json_file)
+        
+        df = pd.DataFrame(jsons)
+        df.to_csv(f"{args.jsons}/file.csv", mode="w", encoding="utf-8")
+    if args.from_csv:
+        # dataframe from existing csv file
+        df = pd.read_csv(args.from_csv)
+        
     # 성별 분포
     def hex_to_RGB(hex_str):
         """ #FFFFFF -> [255,255,255]"""
@@ -69,7 +79,7 @@ if __name__ == "__main__":
         plt.setp(y_labels, fontsize = 10)
         plt.rcParams.update({"figure.autolayout": True})
         ax.xaxis.set_major_formatter(thousands)
-        fig.savefig("성별분포.png", transparent=False, dpi=80, bbox_inches="tight")
+        fig.savefig(f"{args.save_dir}/성별분포.png", transparent=False, dpi=80, bbox_inches="tight")
         
     gender_plot(gender_plot_y,gender_plot_x)
     
@@ -98,7 +108,7 @@ if __name__ == "__main__":
         plt.setp(y_labels, fontsize = 10) # 혹은 setp로 여러 설정 한번에 하기
         plt.rcParams.update({"figure.autolayout": True})
         ax.xaxis.set_major_formatter(thousands)
-        fig.savefig("플랫폼분포.png", transparent=False, dpi=80, bbox_inches="tight") # 저장
+        fig.savefig(f"{args.save_dir}/플랫폼분포.png", transparent=False, dpi=80, bbox_inches="tight") # 저장
         
     platform_plot(platform_plot_x,platform_plot_y)
 
@@ -126,7 +136,7 @@ if __name__ == "__main__":
         plt.setp(y_labels, fontsize = 10) # 혹은 setp로 여러 설정 한번에 하기
         plt.rcParams.update({"figure.autolayout": True})
         ax.xaxis.set_major_formatter(thousands)
-        fig.savefig("화자규모분포.png", transparent=False, dpi=80, bbox_inches="tight") # 저장
+        fig.savefig(f"{args.save_dir}/화자규모분포.png", transparent=False, dpi=80, bbox_inches="tight") # 저장
     
     speaker_plot(speaker_plot_x,speaker_plot_y)
 
@@ -169,7 +179,7 @@ if __name__ == "__main__":
         plt.setp(y_labels, fontsize = 10) # 혹은 setp로 여러 설정 한번에 하기
         plt.rcParams.update({"figure.autolayout": True})
         ax.xaxis.set_major_formatter(thousands)
-        fig.savefig("전사텍스트어절수분포.png", transparent=False, dpi=80, bbox_inches="tight") # 저장
+        fig.savefig(f"{args.save_dir}/전사텍스트어절수분포.png", transparent=False, dpi=80, bbox_inches="tight") # 저장
     
     word_phrase_plot(word_phrase_plot_x,word_phrase_plot_y)
 
@@ -247,6 +257,6 @@ if __name__ == "__main__":
         ax2.bar_label(bar_container, label=percent, fmt="{:,.2f}%",fontsize= 10, label_type = "center")
         plt.axvline(x = 100, linestyle = "--")
         plt.rcParams.update({"figure.autolayout": True})
-        fig.savefig("카테고리 분포.png", transparent=False, dpi=80, bbox_inches="tight") # 저장
+        fig.savefig(f"{args.save_dir}/카테고리 분포.png", transparent=False, dpi=80, bbox_inches="tight") # 저장
     
     domain_plot(x = domain_plot_x,y = domain_plot_y, percent =percent)
