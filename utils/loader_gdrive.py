@@ -1,0 +1,93 @@
+import datasets
+import csv
+import os
+
+
+_DESCRIPTION = """
+Description needed.
+"""
+_HOMEPAGE = "cliveworks.co.kr"
+#Metadata file
+#audio TAR archive at
+_DATA_URL = "https://drive.google.com/uc?export=download&id="
+class CliveDataset(datasets.GeneratorBasedBuilder):
+    def _info(self):
+        return datasets.DatasetInfo(
+            description=_DESCRIPTION,
+            features=datasets.Features(
+                {
+                    "path": datasets.Value("string"),
+                    "audio": datasets.Audio(sampling_rate=16_000),
+                    "sentence": datasets.Value("string")
+                }
+            ),
+            supervised_keys=None,
+            homepage=_HOMEPAGE,
+        )
+    # Download and define the dataset splits
+    def _split_generators(self, dl_manager):
+        """Returns SplitGenerator"""
+        # prompts_path = dl_manager.download(_PROMPTS_URL)
+        audio_path = dl_manager.download(_DATA_URL)
+        local_extracted_archive = dl_manager.extract(audio_path) if not dl_manager.is_streaming else None
+        splits = {
+            "train": "https://drive.google.com/uc?export=download&id=",
+            "test": "https://drive.google.com/uc?export=download&id=",
+            "validation": "https://drive.google.com/uc?export=download&id="
+        }
+        metadata_paths = {}
+        for split in splits:
+            extracted_path = dl_manager.download_and_extract(splits[split])
+            metadata_paths[split] = os.path.join(extracted_path, f"{split}.tsv")
+        
+        return [
+            datasets.SplitGenerator(
+                name = datasets.Split.TRAIN,
+                gen_kwargs={
+                    "local_extracted_archive": local_extracted_archive,
+                    "audio_files": dl_manager.iter_archive(audio_path),
+                    "metadata_path": metadata_paths["train"]
+                }
+            ),
+            datasets.SplitGenerator(
+                name = datasets.Split.TEST,
+                gen_kwargs={
+                    "local_extracted_archive": local_extracted_archive,
+                    "audio_files": dl_manager.iter_archive(audio_path),
+                    "metadata_path": metadata_paths["test"]
+                }
+            ),
+            datasets.SplitGenerator(
+                name = datasets.Split.VALIDATION,
+                gen_kwargs={
+                    "local_extracted_archive": local_extracted_archive,
+                    "audio_files": dl_manager.iter_archive(audio_path),
+                    "metadata_path": metadata_paths["validation"]
+                }
+            )
+        ]
+    
+    
+    
+    def _generate_examples(self, audio_files, local_extracted_archive, metadata_path):
+        """Yields examples as (key, example) tuples."""
+        metadata = {"path": [], "sentence": []}
+        with open(metadata_path, "r", encoding = "utf-8") as f:
+            reader = csv.reader(f, delimiter='\t')
+            for row in reader:
+                audio_path, transcription = row[0].strip().split(" :: ")
+                metadata["path"].append(audio_path)
+                metadata["sentence"].append(transcription)
+        
+        id_ = 0 
+        for path, f in audio_files:
+            if path in metadata["path"]:    
+                result = {}
+                path = os.path.join(local_extracted_archive, path) if local_extracted_archive else audio_path
+                result["path"] = path
+                result["sentence"] = transcription
+                result["audio"] = {"path": audio_path, "bytes": f.read()}
+                yield id_, result
+                id_ += 1  
+
+    
