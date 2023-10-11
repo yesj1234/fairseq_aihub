@@ -7,7 +7,7 @@ import argparse
 import seaborn as sns
 
 plt.style.use("ggplot")
-plt.rc('font', family = 'NanumBarunGothic')
+plt.rc('font', family = 'Malgun Gothic')
 
 
 if __name__ == "__main__":
@@ -92,45 +92,45 @@ if __name__ == "__main__":
     word_phrase_plot(df)
     
     DOMAIN_DISTRIBUTION_KO = {
-        "일상/소통": 0.2,
+        "일상,소통": 0.2,
         "여행": 0.15,
         "게임": 0.15,
         "경제": 0.05,
         "교육": 0.05,
         "스포츠": 0.05,
         "라이브커머스": 0.15,
-        "음식/요리": 0.2
+        "음식,요리": 0.2
     }
     DOMAIN_DISTRIBUTION_EN = {
-        "일상/소통": 0.2,
+        "일상,소통": 0.2,
         "여행": 0.2,
         "게임": 0.2,
-        "음식/요리": 0.2,
-        "운동/건강": 0.2
+        "음식,요리": 0.2,
+        "운동,건강": 0.2
     }
     DOMAIN_DISTRIBUTION_CH = {
-        "일상/소통": 0.2,
+        "일상,소통": 0.2,
         "여행": 0.2,
         "게임": 0.2,
         "라이브커머스": 0.2,
-        "패션/뷰티": 0.2
+        "패션,뷰티": 0.2
     }
     DOMAIN_DISTRIBUTION_JP = {
-        "일상/소통": 0.2,
+        "일상,소통": 0.2,
         "여행": 0.2,
         "게임": 0.2,
-        "음식/요리": 0.2,
-        "패션/뷰티": 0.2
+        "음식,요리": 0.2,
+        "패션,뷰티": 0.2
     }
     TOTAL = 400000 # 40만 문장
 
     def get_percent(category,current_count):
         domain, origin_lang, _ = category.split("_")
-        if origin_lang == "KO":
+        if origin_lang in ["KO", "ko"]:
             return (current_count / (DOMAIN_DISTRIBUTION_KO[domain] * TOTAL)) * 100
-        elif origin_lang == "EN":
+        elif origin_lang in ["EN", "en"]:
             return (current_count / (DOMAIN_DISTRIBUTION_EN[domain] * TOTAL)) * 100
-        elif origin_lang == "JP":
+        elif origin_lang in ["JP", "jp"]:
             return (current_count / (DOMAIN_DISTRIBUTION_JP[domain] * TOTAL)) * 100
         else:
             return (current_count / (DOMAIN_DISTRIBUTION_CH[domain] * TOTAL)) * 100
