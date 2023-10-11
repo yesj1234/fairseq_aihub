@@ -232,8 +232,8 @@ def main(args):
                     print(e)
                     continue
     required_property_missing_file = set(required_property_missing_file)
-    print(f"이빨 빠진 파일 개수: {len(required_property_missing_file)}")
-    print(f"형식에 안맞는 밸류 개수: {len(required_property_value_missing_file)}")
+    print(f"필수 항목 불충족 파일 개수: {len(required_property_missing_file)}")
+    print(f"형식 불충족 밸류 개수: {len(required_property_value_missing_file)}")
     print(f"검사한 총 파일 개수: {len(json_files)}")
 
 
